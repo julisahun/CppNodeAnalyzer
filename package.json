@@ -1,0 +1,13 @@
+{
+  "name": "TFG",
+  "version": "1.0.0",
+  "main": "parser.js",
+  "license": "MIT",
+  "scripts":{
+    "run": "node parser.js"
+  },
+  "dependencies": {
+    "tree-sitter": "^0.20.6",
+    "tree-sitter-cpp": "^0.20.3"
+  }
+}
