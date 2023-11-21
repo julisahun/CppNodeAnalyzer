@@ -3,12 +3,16 @@
   "version": "1.0.0",
   "main": "parser.js",
   "license": "MIT",
-  "scripts":{
-    "run": "node parser.js"
+  "scripts": {
+    "run": "node parser.js > output.txt",
+    "test": "jest"
   },
   "dependencies": {
     "tree-sitter": "^0.20.6",
     "tree-sitter-cpp": "^0.20.3"
   },
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
 }
