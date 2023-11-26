@@ -1,14 +1,23 @@
 import defaultOptions from "./options.js";
 
 class Variable {
-  constructor(name, type) {
+  constructor(name, type, value) {
     this.name = name;
     this.type = type;
     this.used = false;
+    this.value = value;
   }
 
   use() {
     this.used = true;
+  }
+
+  getValue() {
+    return this.value;
+  }
+
+  setValue(value) {
+    this.value = value;
   }
 }
 
@@ -33,17 +42,25 @@ class Data {
   constructor(options) {
     this.variables = {};
     this.functions = {};
-    this.loops = {};
+    this.loop = null;
     this.options = { defaultOptions, ...options };
     this.flags = [];
   }
 
-  declareVariable(name, type) {
-    variables[name] = new Variable(name, type);
+  declareVariable(name, type, value) {
+    this.variables[name] = new Variable(name, type, value);
   }
 
   useVariable(name) {
-    variables[name].use();
+    this.variables[name].use();
+  }
+
+  getValue(name) {
+    return this.variables[name].getValue();
+  }
+
+  setValue(name, value) {
+    this.variables[name].setValue(value);
   }
 
   declareFunction(name, type) {
@@ -52,8 +69,16 @@ class Data {
     }
   }
 
+  createWhile(condition) {
+    this.loop = new While(condition);
+  }
+
   bulk() {
-    console.log(variables);
+    console.log(this.variables);
+  }
+
+  diagnose() {
+    return this.bulk();
   }
 }
 
