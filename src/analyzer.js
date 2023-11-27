@@ -1,6 +1,7 @@
 import Data from "./data/service.js";
 import parser from "./parser.js";
 import utils from "./utils.js";
+import evaluator from './evaluator.js';
 let store;
 
 function analyze(code, options = {}) {
@@ -18,12 +19,14 @@ function analyze(code, options = {}) {
 
 function traverse(node, depth = 0) {
   utils.log(node, depth);
-  if (analyzerExperts[node.type]) {
-    return analyzerExperts[node.type](node, depth);
+  if (traversers[node.type]) {
+    return traversers[node.type](node, depth);
   } else {
     node.children.forEach((c) => traverse(c, depth + 1));
   }
 }
+
+
 
 function identifierTraverser(node, depth) {
   const name = node.text;
@@ -61,7 +64,7 @@ function binary_expressionTraverser(node, depth) {
   const operator = node.child(1).text;
   const rightHandOperand = traverse(node.child(2), depth + 1);
   if (leftHandOperand && rightHandOperand) {
-    return utils.evaluate(leftHandOperand, operator, rightHandOperand);
+    return evaluator.evaluate(leftHandOperand, operator, rightHandOperand);
   }
 }
 
@@ -73,7 +76,7 @@ function using_declarationTraverser(node, depth) {
   //NO_OP
 } 
 
-const analyzerExperts = {
+const traversers = {
   declaration: declarationTraverser,
   expression_statement: expression_statementTraverser,
   identifier: identifierTraverser,
