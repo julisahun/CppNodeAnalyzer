@@ -41,8 +41,10 @@ class While {
 class Data {
   constructor(options) {
     this.variables = {};
+    this.globalVariables = {};
     this.functions = {};
     this.loop = null;
+    this.function = null;
     this.options = { defaultOptions, ...options };
     this.flags = [];
   }
@@ -78,7 +80,10 @@ class Data {
   }
 
   diagnose() {
-    return this.bulk();
+    return {
+      status: "ok",
+      flags: this.flags
+    }
   }
 }
 

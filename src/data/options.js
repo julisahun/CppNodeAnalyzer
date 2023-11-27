@@ -1,4 +1,5 @@
 export default {
+  allowGlobalVariables: true,
   allowFunctions: true,
   allowRecursiveFunctions: true,
   forbiddenIncludes: [],

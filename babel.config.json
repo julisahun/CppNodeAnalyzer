@@ -1,0 +1,18 @@
+{
+  "plugins": [
+    "@babel/plugin-syntax-object-rest-spread",
+    [
+      "module-resolver",
+      {
+        "alias": {
+          "test": "./test",
+          "@": "./src"
+        }
+      }
+    ]
+  ],
+  "presets": [
+    "@babel/preset-env"
+  ],
+  "ignore": ["node_modules"]
+}

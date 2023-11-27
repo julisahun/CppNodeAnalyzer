@@ -1,7 +1,10 @@
 import Data from "./data/service.js";
+import parser from "./parser.js";
+import utils from "./utils.js";
 let store;
 
-function analyze(tree, options = {}) {
+function analyze(code, options = {}) {
+  const tree = parser.parse(code);
   const rootNode = tree.rootNode;
   store = new Data(options);
   try {
@@ -50,7 +53,7 @@ function function_definitionTraverser(node, depth) {
 function while_statementTraverser(node, depth) {
   const condition = node.child(1).child(1);
   const initialEvaluation = traverse(condition, depth + 1);
-  store.crateWhile(condition);
+  store.createWhile(condition);
 }
 
 function binary_expressionTraverser(node, depth) {
@@ -66,6 +69,10 @@ function number_literalTraverser(node, depth) {
   return parseInt(node.text);
 }
 
+function using_declarationTraverser(node, depth) {
+  //NO_OP
+} 
+
 const analyzerExperts = {
   declaration: declarationTraverser,
   expression_statement: expression_statementTraverser,
@@ -74,6 +81,7 @@ const analyzerExperts = {
   while_statement: while_statementTraverser,
   binary_expression: binary_expressionTraverser,
   number_literal: number_literalTraverser,
+  using_declaration: using_declarationTraverser,
 };
 
 export default {
