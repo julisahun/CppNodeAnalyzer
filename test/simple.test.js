@@ -3,26 +3,21 @@ import analyzer from "../src/analyzer.js";
 import fs from "fs";
 
 describe("simple", () => {
-  it("should pass simple code", () => {
-    const code = fs.readFileSync("test/sources/simple/simple.cpp").toString();
+  it('should detect includes', () => {
+    const code = fs.readFileSync("test/sources/simple/includes.cpp").toString();
     const result = analyzer.analyze(code);
-    expect(result).toEqual({ status: "ok", flags: [] });
+    expect(result.usedLibraries).toEqual(['iostream', 'local library'])
   });
 
-  it("should accept global variables", () => {
-    const code = fs
-      .readFileSync("test/sources/simple/global_variable.cpp")
-      .toString();
+  it('should detect unused variable', () => {
+    const code = fs.readFileSync("test/sources/simple/unusedVariable.cpp").toString();
     const result = analyzer.analyze(code);
-    expect(result).toEqual({ status: "ok", flags: [] });
-  });
+    expect(result.unUsedVariables).toEqual(['a'])
+  })
 
-  it("should reject global variables", () => {
-    const code = fs
-      .readFileSync("test/sources/simple/global_variable.cpp")
-      .toString();
-    const options = { allowGlobalVariables: false };
-    const result = analyzer.analyze(code, options);
-    expect(result).toEqual({ status: "error", flags: ["global-variables"] });
-  });
+  it('should not detect used variable', () => {
+    const code = fs.readFileSync("test/sources/simple/usedVariable.cpp").toString()
+    const result = analyzer.analyze(code)
+    expect(result.unUsedVariables).toEqual([])
+  })
 });

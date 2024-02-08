@@ -1,25 +1,43 @@
-import defaultOptions from "./options.js";
+import profiler from "./profiler.js";
 
 class Variable {
-  constructor(name, type, value) {
+  constructor(name, type) {
     this.name = name;
     this.type = type;
     this.used = false;
-    this.value = value;
   }
 
   use() {
     this.used = true;
   }
 
-  getValue() {
-    return this.value;
-  }
-
-  setValue(value) {
-    this.value = value;
+  isUsed() {
+    return this.used
   }
 }
+
+class Scope {
+  constructor() {
+    this.variables = {}
+  }
+
+  declareVariable(name, type) {
+    this.variables[name] = new Variable(name, type);
+  }
+
+  useVariable(name) {
+    this.variables[name].use();
+  }
+
+  getUnUsedVariables() {
+    return Object.values(this.variables).filter(variable => !variable.isUsed())
+  }
+
+  containsVariable(name) {
+    return name in this.variables
+  }
+}
+
 
 class Function {
   constructor(name, type) {
@@ -39,40 +57,48 @@ class While {
 }
 
 class Data {
-  constructor(options) {
-    this.variables = {};
-    this.globalVariables = {};
-    this.functions = {};
-    this.loop = null;
-    this.function = null;
-    this.options = { defaultOptions, ...options };
-    this.flags = [];
+  constructor() {
+    this.currentScope = null
+    this.scopes = [];
+    this.libraries = [];
+    this.unUsedVariables = [];
+    let globalScope = new Scope()
+    this.scopes.push(globalScope)
+    this.currentScope = globalScope 
+    this.profiler = new profiler()
   }
 
-  declareVariable(name, type, value) {
-    this.variables[name] = new Variable(name, type, value);
+  declareVariable(name, type) {
+    const alreadyDeclared = this.scopes.some(scope => scope.containsVariable(name))
+    if (alreadyDeclared) this.profiler.registerReDeclaration()
+    this.currentScope.declareVariable(name, type)
   }
 
   useVariable(name) {
-    this.variables[name].use();
+    for (let scope of this.scopes) {
+      if (scope.containsVariable(name)) {
+        scope.useVariable(name)
+        break;
+      }
+    }    
   }
 
-  getValue(name) {
-    return this.variables[name].getValue();
+  registerInclude(name) {
+    const libraryName = name.replace(/[<>"']/g, '')
+    this.profiler.addInclude(libraryName)
   }
 
-  setValue(name, value) {
-    this.variables[name].setValue(value);
+  createScope() {
+    let newScope = new Scope()
+    this.currentScope = newScope
+    this.scopes.unshift(newScope)
   }
 
-  declareFunction(name, type) {
-    if (!this.options.allowFunctions) {
-      throw new Error("Functions are not allowed");
-    }
-  }
-
-  createWhile(condition) {
-    this.loop = new While(condition);
+  leaveScope() {
+    let leavingScope = this.scopes.pop()
+    this.currentScope = this.scopes.slice(-1)
+    let unUsedVariables = leavingScope.getUnUsedVariables()
+    unUsedVariables.forEach(v => this.profiler.addUnUsedVariable(v.name))
   }
 
   bulk() {
@@ -80,10 +106,7 @@ class Data {
   }
 
   diagnose() {
-    return {
-      status: "ok",
-      flags: this.flags
-    }
+    return this.profiler.result()
   }
 }
 
