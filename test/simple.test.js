@@ -15,6 +15,12 @@ describe("simple", () => {
     expect(result.unUsedVariables).toEqual(['a'])
   })
 
+  it('should detect redeclaration', () => {
+    const code = fs.readFileSync("test/sources/simple/redeclaration.cpp").toString();
+    const result = analyzer.analyze(code);
+    expect(result.containsRedeclarations).toBe(true)
+  })
+
   it('should not detect used variable', () => {
     const code = fs.readFileSync("test/sources/simple/usedVariable.cpp").toString()
     const result = analyzer.analyze(code)

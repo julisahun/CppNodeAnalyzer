@@ -80,6 +80,14 @@ function preproc_includeTraverser(node, depth) {
 
 function compound_statementTraverser(node, depth) {
   store.createScope()
+  const body = node.child(1);
+  traverse(body, depth + 1);
+}
+
+function condition_clauseTraverser(node, depth) {
+  const condition = utils.flatten(node.child(1));
+  store.storeCondition(condition);
+  // traverse(node.child(1), depth + 1);
 }
 
 const traversers = {
@@ -91,6 +99,7 @@ const traversers = {
   // binary_expression: binary_expressionTraverser,
   // number_literal: number_literalTraverser,
   // using_declaration: using_declarationTraverser,
+  condition_clause: condition_clauseTraverser,
   compound_statement: compound_statementTraverser,
   preproc_include: preproc_includeTraverser
 };

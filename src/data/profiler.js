@@ -2,7 +2,8 @@ class profiler {
   constructor() {
     this.libraries = [];
     this.unUsedVariables = [];
-    this.reDeclaration = false;
+    this.redeclaration = false;
+    this.constantConditions = false;
   }
 
   addInclude(name) {
@@ -13,15 +14,20 @@ class profiler {
     this.unUsedVariables.push(name)
   }
 
-  registerReDeclaration() {
-    this.reDeclaration = true
+  registerRedeclaration() {
+    this.redeclaration = true
+  }
+
+  registerConstantCondition() {
+    this.constantConditions = true
   }
 
   result() {
     return {
       usedLibraries: this.libraries,
       unUsedVariables: this.unUsedVariables,
-      containsReDeclarations: this.reDeclaration
+      containsRedeclarations: this.redeclaration,
+      containsConstantConditions: this.constantConditions
     }
   }
 }

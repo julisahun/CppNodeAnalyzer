@@ -56,6 +56,17 @@ class While {
   }
 }
 
+class Condition {
+  constructor(nodes) {
+    this.nodes = nodes
+  }
+
+  hasVariables() {
+    return this.nodes.some(node => node.type === 'identifier')
+  }
+
+}
+
 class Data {
   constructor() {
     this.currentScope = null
@@ -70,7 +81,7 @@ class Data {
 
   declareVariable(name, type) {
     const alreadyDeclared = this.scopes.some(scope => scope.containsVariable(name))
-    if (alreadyDeclared) this.profiler.registerReDeclaration()
+    if (alreadyDeclared) this.profiler.registerRedeclaration()
     this.currentScope.declareVariable(name, type)
   }
 
@@ -99,6 +110,12 @@ class Data {
     this.currentScope = this.scopes.slice(-1)
     let unUsedVariables = leavingScope.getUnUsedVariables()
     unUsedVariables.forEach(v => this.profiler.addUnUsedVariable(v.name))
+  }
+
+  storeCondition(nodes) {
+    this.condition = new Condition(nodes)
+    if (!this.condition.hasVariables()) 
+      this.profiler.registerConstantCondition()
   }
 
   bulk() {

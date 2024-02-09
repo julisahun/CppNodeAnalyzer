@@ -8,4 +8,11 @@ describe("scopes", () => {
     const result = analyzer.analyze(code);
     expect(result.unUsedVariables).toEqual([])
   });
+
+  it('should detect redeclarations across scopes', () => {
+    const code = fs.readFileSync("test/sources/scopes/redeclaration.cpp").toString();
+    const result = analyzer.analyze(code);
+    expect(result.containsRedeclarations).toEqual(true)
+  });
+
 });
