@@ -17,8 +17,17 @@ class Variable {
 }
 
 class Scope {
-  constructor() {
+  constructor({type}) {
     this.variables = {}
+    this.condition = null
+    this.usedVariables = []
+    switch (type) {
+      case 'while':
+        this.loops = true
+        break;
+      default:
+        this.loops = false
+    }
   }
 
   declareVariable(name, type) {
@@ -26,7 +35,8 @@ class Scope {
   }
 
   useVariable(name) {
-    this.variables[name].use();
+    this.variables[name]?.use();
+    this.usedVariables.push(name)
   }
 
   getUnUsedVariables() {
@@ -36,23 +46,12 @@ class Scope {
   containsVariable(name) {
     return name in this.variables
   }
-}
 
-
-class Function {
-  constructor(name, type) {
-    this.name = name;
-    this.type = type;
-    this.invoked = false;
-    this.isRecursive = false;
-  }
-}
-
-class While {
-  constructor(condition) {
-    this.breaks = false;
-    this.conditionUpdates = false;
-    this.condition = condition;
+  conditionUpdated() {
+    const conditionVariables = this.condition.variables()
+    console.log({conditionVariables, usedVariables: this.usedVariables})
+    return conditionVariables.every(variable => this.usedVariables.includes(variable))
+    
   }
 }
 
@@ -65,6 +64,9 @@ class Condition {
     return this.nodes.some(node => node.type === 'identifier')
   }
 
+  variables() {
+    return this.nodes.filter(node => node.type === 'identifier').map(node => node.text)
+  }
 }
 
 class Data {
@@ -73,7 +75,7 @@ class Data {
     this.scopes = [];
     this.libraries = [];
     this.unUsedVariables = [];
-    let globalScope = new Scope()
+    let globalScope = new Scope({})
     this.scopes.push(globalScope)
     this.currentScope = globalScope 
     this.profiler = new profiler()
@@ -87,10 +89,9 @@ class Data {
 
   useVariable(name) {
     for (let scope of this.scopes) {
-      if (scope.containsVariable(name)) {
-        scope.useVariable(name)
+      scope.useVariable(name)
+      if (scope.containsVariable(name)) 
         break;
-      }
     }    
   }
 
@@ -99,8 +100,8 @@ class Data {
     this.profiler.addInclude(libraryName)
   }
 
-  createScope() {
-    let newScope = new Scope()
+  createScope(params = {}) {
+    let newScope = new Scope(params)
     this.currentScope = newScope
     this.scopes.unshift(newScope)
   }
@@ -110,11 +111,14 @@ class Data {
     this.currentScope = this.scopes.slice(-1)
     let unUsedVariables = leavingScope.getUnUsedVariables()
     unUsedVariables.forEach(v => this.profiler.addUnUsedVariable(v.name))
+    if (leavingScope.loops && !leavingScope.conditionUpdated()) 
+      this.profiler.registerConstantCondition()
   }
 
   storeCondition(nodes) {
-    this.condition = new Condition(nodes)
-    if (!this.condition.hasVariables()) 
+    const condition = new Condition(nodes)
+    this.currentScope.condition = condition
+    if (!condition.hasVariables()) 
       this.profiler.registerConstantCondition()
   }
 

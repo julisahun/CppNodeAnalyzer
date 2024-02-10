@@ -53,9 +53,7 @@ function function_definitionTraverser(node, depth) {
 }
 
 function while_statementTraverser(node, depth) {
-  const condition = node.child(1).child(1);
-  const initialEvaluation = traverse(condition, depth + 1);
-  store.createWhile(condition);
+  store.createScope({ type: "while" });
 }
 
 function binary_expressionTraverser(node, depth) {
@@ -79,13 +77,14 @@ function preproc_includeTraverser(node, depth) {
 }
 
 function compound_statementTraverser(node, depth) {
-  store.createScope()
   const body = node.child(1);
   traverse(body, depth + 1);
+  store.leaveScope()
 }
 
 function condition_clauseTraverser(node, depth) {
   const condition = utils.flatten(node.child(1));
+  store.createScope();
   store.storeCondition(condition);
   // traverse(node.child(1), depth + 1);
 }
@@ -95,7 +94,7 @@ const traversers = {
   // expression_statement: expression_statementTraverser,
   identifier: identifierTraverser,
   // function_definition: function_definitionTraverser,
-  // while_statement: while_statementTraverser,
+  while_statement: while_statementTraverser,
   // binary_expression: binary_expressionTraverser,
   // number_literal: number_literalTraverser,
   // using_declaration: using_declarationTraverser,

@@ -1,6 +1,6 @@
 - [x] Unused variables
 - [x] Includes used
 - [x] Redeclarations
-- [ ] Constant conditions
+- [x] Constant conditions
 - [ ] Non updating conditions
 - [ ] Recursive programs
