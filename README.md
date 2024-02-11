@@ -2,5 +2,5 @@
 - [x] Includes used
 - [x] Redeclarations
 - [x] Constant conditions
-- [ ] Non updating conditions
+- [x] Non updating conditions
 - [ ] Recursive programs

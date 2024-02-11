@@ -7,6 +7,7 @@ function analyze(code) {
   const tree = parser.parse(code);
   const rootNode = tree.rootNode;
   store = new Data();
+  store.createScope({ type: "global" });
   try {
     traverse(rootNode);
   } catch (e) {
@@ -26,8 +27,6 @@ function traverse(node, depth = 0) {
   }
 }
 
-
-
 function identifierTraverser(node, depth) {
   const name = node.text;
   store.useVariable(name);
@@ -40,34 +39,30 @@ function declarationTraverser(node, depth) {
   store.declareVariable(name, type);
 }
 
-function expression_statementTraverser(node, depth) {
-  if (node.child(0)?.children.length >= 3) {
-    const name = node.child(0).child(0).text;
-    const value = traverse(node.child(0).child(2), depth + 1);
-    store.setValue(name, value);
-  }
-}
-
-function function_definitionTraverser(node, depth) {
-  traverse(node.child(2), depth + 1);
-}
 
 function while_statementTraverser(node, depth) {
   store.createScope({ type: "while" });
-}
+  const conditionNode = node.child(1);
+  const bodyNode = node.child(2);
 
-function binary_expressionTraverser(node, depth) {
-  const leftHandOperand = traverse(node.child(0), depth + 1);
-  const operator = node.child(1).text;
-  const rightHandOperand = traverse(node.child(2), depth + 1);
+  traverse(conditionNode, depth + 1);
+  traverse(bodyNode, depth + 1);
+  store.leaveScope();
 }
-
-function number_literalTraverser(node, depth) {
-  return parseInt(node.text);
-}
-
-function using_declarationTraverser(node, depth) {
-  //NO_OP
+function for_statementTraverser(node, depth) {
+  node.children.forEach((c) => utils.log(c, depth + 1));
+  const initializerNode = node.child(2);
+  const condition = utils.flatten(node.child(3));
+  const incrementNode = node.child(5);
+  const bodyNode = node.child(7);
+  store.createScope()
+  traverse(initializerNode, depth + 1);
+  store.createScope({ type: "for" });
+  store.storeCondition(condition);
+  traverse(bodyNode, depth + 1);
+  traverse(incrementNode, depth + 1);
+  store.leaveScope();
+  store.leaveScope();
 }
 
 function preproc_includeTraverser(node, depth) {
@@ -79,25 +74,18 @@ function preproc_includeTraverser(node, depth) {
 function compound_statementTraverser(node, depth) {
   const body = node.child(1);
   traverse(body, depth + 1);
-  store.leaveScope()
 }
 
 function condition_clauseTraverser(node, depth) {
   const condition = utils.flatten(node.child(1));
-  store.createScope();
   store.storeCondition(condition);
-  // traverse(node.child(1), depth + 1);
 }
 
 const traversers = {
   declaration: declarationTraverser,
-  // expression_statement: expression_statementTraverser,
   identifier: identifierTraverser,
-  // function_definition: function_definitionTraverser,
   while_statement: while_statementTraverser,
-  // binary_expression: binary_expressionTraverser,
-  // number_literal: number_literalTraverser,
-  // using_declaration: using_declarationTraverser,
+  for_statement: for_statementTraverser,
   condition_clause: condition_clauseTraverser,
   compound_statement: compound_statementTraverser,
   preproc_include: preproc_includeTraverser

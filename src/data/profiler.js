@@ -1,4 +1,4 @@
-class profiler {
+class Profiler {
   constructor() {
     this.libraries = [];
     this.unUsedVariables = [];
@@ -33,4 +33,4 @@ class profiler {
 }
 
 
-export default profiler
+export default Profiler
