@@ -1,13 +1,15 @@
 import Profiler from "./profiler.js";
 import Scope from "./objects/scope.js";
+import ConditionalScope from "./objects/conditionalScope.js";
 import Condition from "./objects/condition.js";
+import FunctionScope from "./objects/functionScope.js";
+
+const conditionalScopes = ["if", "else if", "while", "for"]
 
 class Data {
   constructor() {
     this.currentScope = null
     this.scopes = [];
-    this.libraries = [];
-    this.unUsedVariables = []; 
     this.profiler = new Profiler()
   }
 
@@ -30,8 +32,15 @@ class Data {
     this.profiler.addInclude(libraryName)
   }
 
-  createScope(params = {}) {
-    let newScope = new Scope(params)
+  createScope({type, returnType} = {}) {
+    let newScope
+    if (conditionalScopes.includes(type)) {
+      newScope = new ConditionalScope({ loops: type === "while" || type === "for" })
+    } else if (type === "function") {
+      newScope = new FunctionScope({ returnType })
+    } else {
+      newScope = new Scope()
+    }
     this.currentScope = newScope
     this.scopes.unshift(newScope)
   }
@@ -48,8 +57,19 @@ class Data {
   storeCondition(nodes) {
     const condition = new Condition(nodes)
     this.currentScope.condition = condition
-    if (!condition.hasVariables()) 
-      this.profiler.registerConstantCondition()
+  }
+
+  breakStatement() {
+    this.currentScope.registerBreak()
+    this.profiler.registerBreak()
+  }
+
+  setFunctionName(name) {
+    this.currentScope.name = name
+  }
+
+  storeParameter(type, name) {
+    this.currentScope.addParameter(type, name)
   }
 
   diagnose() {

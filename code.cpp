@@ -1,4 +1,16 @@
-int a = 2;
-while (a > 2) {
-    b++;
+#include <iostream>
+
+using namespace std;
+
+int main ()
+{
+
+int a;
+int b;
+int c;
+
+cin >> a >> b;
+
+if (a >= b) cout << b << endl;
+else cout << a << endl;
 }

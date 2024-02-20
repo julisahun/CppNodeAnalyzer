@@ -4,6 +4,7 @@ class Profiler {
     this.unUsedVariables = [];
     this.redeclaration = false;
     this.constantConditions = false;
+    this.breaks = false;
   }
 
   addInclude(name) {
@@ -22,12 +23,17 @@ class Profiler {
     this.constantConditions = true
   }
 
+  registerBreak() {
+    this.breaks = true
+  }
+
   result() {
     return {
       usedLibraries: this.libraries,
       unUsedVariables: this.unUsedVariables,
       containsRedeclarations: this.redeclaration,
-      containsConstantConditions: this.constantConditions
+      containsConstantConditions: this.constantConditions,
+      usesBreaks: this.breaks
     }
   }
 }

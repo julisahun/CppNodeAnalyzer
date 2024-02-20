@@ -35,6 +35,7 @@ function identifierTraverser(node, depth) {
 function declarationTraverser(node, depth) {
   const type = node.child(0).text;
   const name = node.child(1).child(0).text;
+  console.log(name)
   traverse(node.child(1).child(2), depth + 1);
   store.declareVariable(name, type);
 }
@@ -72,13 +73,37 @@ function preproc_includeTraverser(node, depth) {
 }
 
 function compound_statementTraverser(node, depth) {
-  const body = node.child(1);
-  traverse(body, depth + 1);
+  node.children.forEach((c) => traverse(c, depth + 1));
 }
 
 function condition_clauseTraverser(node, depth) {
   const condition = utils.flatten(node.child(1));
   store.storeCondition(condition);
+}
+
+function break_statementTraverser(node, depth) {
+  store.breakStatement();
+}
+
+function function_definitionTraverser(node, depth) {
+  const type = node.child(0).text;
+  store.createScope({ type: "function", returnType: type });
+  traverse(node.child(1), depth + 1);
+  traverse(node.child(2), depth + 1);
+  store.leaveScope();
+}
+
+function function_declaratorTraverser(node, depth) {
+  const name = node.child(0).text;
+  store.setFunctionName(name);
+  const parameterList = node.child(1)
+  parameterList.forEach(parameter => traverse(parameter, depth + 1))
+}
+
+function parameter_declarationTraverser(node, depth) {
+  const type = node.child(0).text;
+  const name = node.child(1).text;
+  store.storeParameter(name, type);
 }
 
 const traversers = {
@@ -88,7 +113,11 @@ const traversers = {
   for_statement: for_statementTraverser,
   condition_clause: condition_clauseTraverser,
   compound_statement: compound_statementTraverser,
-  preproc_include: preproc_includeTraverser
+  preproc_include: preproc_includeTraverser,
+  break_statement: break_statementTraverser,
+  function_definition: function_definitionTraverser,
+  function_declarator: function_declaratorTraverser,
+  parameter_declaration: parameter_declarationTraverser,
 };
 
 export default {

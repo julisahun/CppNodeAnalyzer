@@ -27,4 +27,28 @@ describe('loops', () => {
     const result = analyzer.analyze(code);
     expect(result.containsConstantConditions).toEqual(true)
   });
+
+  it('should detect breaks in while loops', () => {
+    const code = fs.readFileSync("test/sources/loops/breakWhile.cpp").toString();
+    const result = analyzer.analyze(code);
+    expect(result.usesBreaks).toEqual(true)
+  });
+
+  it('should pass constant conditions in while loops with breaks', () => {
+    const code = fs.readFileSync("test/sources/loops/breakWhile.cpp").toString();
+    const result = analyzer.analyze(code);
+    expect(result.containsConstantConditions).toEqual(false)
+  });
+
+  it('should detect breaks in for loops', () => {
+    const code = fs.readFileSync("test/sources/loops/breakFor.cpp").toString();
+    const result = analyzer.analyze(code);
+    expect(result.usesBreaks).toEqual(true)
+  });
+
+  it('should pass constant conditions in for loops with breaks', () => {
+    const code = fs.readFileSync("test/sources/loops/breakFor.cpp").toString();
+    const result = analyzer.analyze(code);
+    expect(result.containsConstantConditions).toEqual(false)
+  });
 })
