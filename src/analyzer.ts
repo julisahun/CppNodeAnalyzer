@@ -1,9 +1,9 @@
-import Data from "./data/service.js";
-import parser from "./parser.js";
-import utils from "./utils.js";
+import Data from "./data/service";
+import parser from "./parser";
+import utils from "./utils";
 let store;
 
-function analyze(code) {
+function analyze(code: string) {
   const tree = parser.parse(code);
   const rootNode = tree.rootNode;
   store = new Data();

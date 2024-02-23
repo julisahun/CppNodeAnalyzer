@@ -1,16 +1,18 @@
-import Variable from "./variable.js";
+import Variable from "./variable";
 
 export default class Scope{
+  variables: {[key: string]: Variable};
+  usedVariables: string[];
   constructor() {
     this.variables = {}
     this.usedVariables = []
   }
 
-  declareVariable(name, type) {
+  declareVariable(name: string, type: string) {
     this.variables[name] = new Variable(name, type);
   }
 
-  useVariable(name) { 
+  useVariable(name: string) { 
     this.variables[name]?.use();
     this.usedVariables.push(name)
   }
@@ -19,7 +21,7 @@ export default class Scope{
     return Object.values(this.variables).filter(variable => !variable.isUsed())
   }
 
-  containsVariable(name) {
+  containsVariable(name: string) {
     return name in this.variables
   }
 }

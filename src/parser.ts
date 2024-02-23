@@ -2,7 +2,7 @@ import Parser from "tree-sitter";
 import Cpp from "tree-sitter-cpp";
 
 export default {
-  parse: (code) => {
+  parse: (code: string) => {
     const parser = new Parser();
     parser.setLanguage(Cpp);
 

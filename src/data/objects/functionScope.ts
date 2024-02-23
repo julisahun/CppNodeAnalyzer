@@ -1,6 +1,10 @@
-import Scope from "./scope.js";
+import Scope from "./scope";
+import Variable from "./variable";
 
 export default class functionScope extends Scope {
+    parameters: string[];
+    returnType: string;
+    name: string;
     constructor({returnType}) {
         super()
         this.parameters = []
@@ -8,7 +12,7 @@ export default class functionScope extends Scope {
         this.name = null
     }
 
-    addParameter(parameters) {
+    addParameter(name: string, type: string) {
 
     }
 }

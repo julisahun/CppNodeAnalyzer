@@ -1,16 +1,5 @@
-#include <iostream>
-
-using namespace std;
-
-int main ()
-{
-
-int a;
-int b;
-int c;
-
-cin >> a >> b;
-
-if (a >= b) cout << b << endl;
-else cout << a << endl;
+int a = 2;
+if (true) {
+    a = 3;
 }
+int b = 4;

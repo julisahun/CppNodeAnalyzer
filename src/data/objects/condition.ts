@@ -1,5 +1,8 @@
+import {SyntaxNode as Node} from "tree-sitter"
+
 export default class Condition {
-  constructor(nodes) {
+  nodes: Node[]
+  constructor(nodes: Node[]) {
     this.nodes = nodes
   }
 

@@ -1,6 +1,10 @@
-import Scope from "./scope.js";
+import Condition from "./condition";
+import Scope from "./scope";
 
 export default class ConditionalScope extends Scope {
+    loops: boolean;
+    breaks: boolean;
+    condition: Condition;
     constructor({ loops = false }) {
         super()
         this.loops = loops
