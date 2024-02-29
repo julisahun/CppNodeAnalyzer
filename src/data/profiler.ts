@@ -16,7 +16,7 @@ class Profiler {
     this.libraries.push(name)
   }
 
-  addUnUsedVariable(name) {
+  addUnUsedVariable(name: string) {
     this.unUsedVariables.push(name)
   }
 
