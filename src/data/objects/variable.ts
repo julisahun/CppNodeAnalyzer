@@ -1,5 +1,8 @@
 export default class Variable {
-    constructor(name, type) {
+    name: string;
+    type: string;
+    used: boolean;
+    constructor(name: string, type: string) {
       this.name = name;
       this.type = type;
       this.used = false;

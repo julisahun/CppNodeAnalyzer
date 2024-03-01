@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import analyzer from "./src/analyzer.js";
+import * as analyzer from "./src/analyzer";
 
 const fileName = "code.cpp";
 const code = fs.readFileSync(fileName).toString();

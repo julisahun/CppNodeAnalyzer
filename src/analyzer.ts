@@ -1,9 +1,11 @@
-import Data from "./data/service.js";
-import parser from "./parser.js";
-import utils from "./utils.js";
+import Data from "./data/service";
+import parser from "./parser";
+import utils from "./utils";
+import {SyntaxNode as Node} from "tree-sitter"
+
 let store;
 
-function analyze(code) {
+export function analyze(code: string) {
   const tree = parser.parse(code);
   const rootNode = tree.rootNode;
   store = new Data();
@@ -18,8 +20,8 @@ function analyze(code) {
   }
 }
 
-function traverse(node, depth = 0) {
-  utils.log(node, depth);
+function traverse(node: Node, depth: number = 0) {
+  utils.log(node,depth);
   if (traversers[node.type]) {
     return traversers[node.type](node, depth);
   } else {
@@ -27,21 +29,25 @@ function traverse(node, depth = 0) {
   }
 }
 
-function identifierTraverser(node, depth) {
+function identifierTraverser(node: Node, depth: number) {
   const name = node.text;
   store.useVariable(name);
 }
 
-function declarationTraverser(node, depth) {
+function declarationTraverser(node: Node, depth: number) {
   const type = node.child(0).text;
-  const name = node.child(1).child(0).text;
-  console.log(name)
-  traverse(node.child(1).child(2), depth + 1);
+  let name: string
+  if (node.child(1).childCount === 0) {
+    name = node.child(1).text;
+  } else {
+    traverse(node.child(1).child(2), depth + 1);
+    name = node.child(1).child(0).text;
+  }
   store.declareVariable(name, type);
 }
 
 
-function while_statementTraverser(node, depth) {
+function while_statementTraverser(node: Node, depth: number) {
   store.createScope({ type: "while" });
   const conditionNode = node.child(1);
   const bodyNode = node.child(2);
@@ -50,7 +56,7 @@ function while_statementTraverser(node, depth) {
   traverse(bodyNode, depth + 1);
   store.leaveScope();
 }
-function for_statementTraverser(node, depth) {
+function for_statementTraverser(node: Node, depth: number) {
   node.children.forEach((c) => utils.log(c, depth + 1));
   const initializerNode = node.child(2);
   const condition = utils.flatten(node.child(3));
@@ -66,26 +72,35 @@ function for_statementTraverser(node, depth) {
   store.leaveScope();
 }
 
-function preproc_includeTraverser(node, depth) {
+function if_statementTraverser(node: Node, depth: number) {
+  store.createScope({ type: "if" });
+  const conditionNode = node.child(1);
+  const bodyNode = node.child(2);
+  traverse(conditionNode, depth + 1);
+  traverse(bodyNode, depth + 1);
+  store.leaveScope();
+}
+
+function preproc_includeTraverser(node: Node, depth: number) {
   if (node.child(0).text === '#include') {
     store.registerInclude(node.child(1).text)
   }
 }
 
-function compound_statementTraverser(node, depth) {
+function compound_statementTraverser(node: Node, depth: number) {
   node.children.forEach((c) => traverse(c, depth + 1));
 }
 
-function condition_clauseTraverser(node, depth) {
+function condition_clauseTraverser(node: Node, depth: number) {
   const condition = utils.flatten(node.child(1));
   store.storeCondition(condition);
 }
 
-function break_statementTraverser(node, depth) {
+function break_statementTraverser(node: Node, depth: number) {
   store.breakStatement();
 }
 
-function function_definitionTraverser(node, depth) {
+function function_definitionTraverser(node: Node, depth: number) {
   const type = node.child(0).text;
   store.createScope({ type: "function", returnType: type });
   traverse(node.child(1), depth + 1);
@@ -93,14 +108,14 @@ function function_definitionTraverser(node, depth) {
   store.leaveScope();
 }
 
-function function_declaratorTraverser(node, depth) {
+function function_declaratorTraverser(node: Node, depth: number) {
   const name = node.child(0).text;
   store.setFunctionName(name);
   const parameterList = node.child(1)
-  parameterList.forEach(parameter => traverse(parameter, depth + 1))
+  parameterList.children.forEach(parameter => traverse(parameter, depth + 1))
 }
 
-function parameter_declarationTraverser(node, depth) {
+function parameter_declarationTraverser(node: Node, depth: number) {
   const type = node.child(0).text;
   const name = node.child(1).text;
   store.storeParameter(name, type);
@@ -111,6 +126,7 @@ const traversers = {
   identifier: identifierTraverser,
   while_statement: while_statementTraverser,
   for_statement: for_statementTraverser,
+  if_statement: if_statementTraverser,
   condition_clause: condition_clauseTraverser,
   compound_statement: compound_statementTraverser,
   preproc_include: preproc_includeTraverser,
@@ -120,6 +136,3 @@ const traversers = {
   parameter_declaration: parameter_declarationTraverser,
 };
 
-export default {
-  analyze,
-};

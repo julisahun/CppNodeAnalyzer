@@ -1,4 +1,9 @@
 class Profiler {
+  libraries: string[];
+  unUsedVariables: string[];
+  redeclaration: boolean;
+  constantConditions: boolean;
+  breaks: boolean;
   constructor() {
     this.libraries = [];
     this.unUsedVariables = [];
@@ -7,11 +12,11 @@ class Profiler {
     this.breaks = false;
   }
 
-  addInclude(name) {
+  addInclude(name: string) {
     this.libraries.push(name)
   }
 
-  addUnUsedVariable(name) {
+  addUnUsedVariable(name: string) {
     this.unUsedVariables.push(name)
   }
 
