@@ -6,7 +6,6 @@
   "scripts": {
     "build": "tsc -p ./tsconfig.json",
     "clean": "tsc --build --clean",
-    "analyze": "node dist/index.js",
     "test": "jest"
   },
   "dependencies": {
