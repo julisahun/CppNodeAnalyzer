@@ -92,3 +92,9 @@ export function parameter_declarationTraverser(node: Node, depth: number) {
   const name = node.child(1).text;
   this.store.storeParameter(name, type);
 }
+
+export function call_expressionTraverser(node: Node, depth: number) {
+  const name = node.child(0).text;
+  this.store.registerCall(name);
+  node.children.forEach((c) => this.traverse(c, depth + 1));
+}

@@ -4,12 +4,16 @@ class Profiler {
   redeclaration: boolean;
   constantConditions: boolean;
   breaks: boolean;
+  usesFunctions: boolean;
+  recursive: boolean;
   constructor() {
     this.libraries = [];
     this.unUsedVariables = [];
     this.redeclaration = false;
     this.constantConditions = false;
     this.breaks = false;
+    this.usesFunctions = false;
+    this.recursive = false;
   }
 
   addInclude(name: string) {
@@ -32,13 +36,23 @@ class Profiler {
     this.breaks = true
   }
 
+  registerFunction() {
+    this.usesFunctions = true
+  }
+
+  registerRecursion() {
+    this.recursive = true
+  }
+
   result() {
     return {
       usedLibraries: this.libraries,
       unUsedVariables: this.unUsedVariables,
       containsRedeclarations: this.redeclaration,
       containsConstantConditions: this.constantConditions,
-      usesBreaks: this.breaks
+      usesFunctions: this.usesFunctions,
+      usesBreaks: this.breaks,
+      isRecursive: this.recursive
     }
   }
 }

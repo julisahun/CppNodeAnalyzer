@@ -3,6 +3,7 @@ import Scope from "./objects/scope";
 import ConditionalScope from "./objects/conditionalScope";
 import Condition from "./objects/condition";
 import FunctionScope from "./objects/functionScope";
+import * as algorithms from "../algorithms";
 import {SyntaxNode as Node} from "tree-sitter"
 
 const conditionalScopes = ["if", "else if", "while", "for"]
@@ -11,10 +12,12 @@ class Data {
   currentScope: Scope;
   scopes: Scope[];
   profiler: Profiler;
+  dependencies: { [key: string]: string[]};
   constructor() {
     this.currentScope = null
     this.scopes = [];
     this.profiler = new Profiler()
+    this.dependencies = {}
   }
 
   declareVariable(name: string, type: string) {
@@ -72,16 +75,29 @@ class Data {
   }
 
   setFunctionName(name: string) {
-    if (this.currentScope instanceof FunctionScope)
+    if (this.currentScope instanceof FunctionScope) {
       this.currentScope.name = name
+      this.dependencies[name] = []
+      if (name !== 'main')
+        this.profiler.registerFunction()
+    }
   }
 
-  storeParameter(type: string, name: string) {
+  storeParameter(name: string, type: string) {
     if (this.currentScope instanceof FunctionScope)
-      this.currentScope.addParameter(type, name)
+      this.currentScope.addParameter(name, type)
+    this.declareVariable(name, type)
+  }
+
+  registerCall(name: string) {
+    if (this.currentScope instanceof FunctionScope) {
+      this.dependencies[this.currentScope.name].push(name)
+    }
   }
 
   diagnose() {
+    const isRecursive = algorithms.isRecursive(this.dependencies)
+    if (isRecursive) this.profiler.registerRecursion()
     return this.profiler.result()
   }
 }

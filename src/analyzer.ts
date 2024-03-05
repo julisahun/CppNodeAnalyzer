@@ -44,6 +44,7 @@ export default class Analyzer {
     function_definition: traversers.function_definitionTraverser.bind(this),
     function_declarator: traversers.function_declaratorTraverser.bind(this),
     parameter_declaration: traversers.parameter_declarationTraverser.bind(this),
+    call_expression: traversers.call_expressionTraverser.bind(this),
   };
 }
 

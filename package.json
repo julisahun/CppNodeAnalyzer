@@ -6,7 +6,9 @@
   "scripts": {
     "build": "tsc -p ./tsconfig.json",
     "clean": "tsc --build --clean",
-    "test": "jest"
+    "test": "jest",
+    "analyze": "ts-node index.ts"
+
   },
   "dependencies": {
     "babel-plugin-module-resolver": "^5.0.0",
