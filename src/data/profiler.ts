@@ -1,3 +1,5 @@
+import { analyzerResult } from './types'
+
 class Profiler {
   libraries: string[];
   unUsedVariables: string[];
@@ -44,7 +46,7 @@ class Profiler {
     this.recursive = true
   }
 
-  result() {
+  result(): analyzerResult {
     return {
       usedLibraries: this.libraries,
       unUsedVariables: this.unUsedVariables,
