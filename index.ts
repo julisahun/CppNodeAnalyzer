@@ -6,4 +6,4 @@ const code = fs.readFileSync(fileName).toString();
 
 const analyzer = new Analyzer();
 const result = analyzer.analyze(code);
-console.log(result)
+console.log(result);

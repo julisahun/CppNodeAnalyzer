@@ -1,4 +1,4 @@
-import { analyzerResult } from './types'
+import { analyzerResult } from "./types";
 
 class Profiler {
   libraries: string[];
@@ -19,31 +19,31 @@ class Profiler {
   }
 
   addInclude(name: string) {
-    this.libraries.push(name)
+    this.libraries.push(name);
   }
 
   addUnUsedVariable(name: string) {
-    this.unUsedVariables.push(name)
+    this.unUsedVariables.push(name);
   }
 
   registerRedeclaration() {
-    this.redeclaration = true
+    this.redeclaration = true;
   }
 
   registerConstantCondition() {
-    this.constantConditions = true
+    this.constantConditions = true;
   }
 
   registerBreak() {
-    this.breaks = true
+    this.breaks = true;
   }
 
   registerFunction() {
-    this.usesFunctions = true
+    this.usesFunctions = true;
   }
 
   registerRecursion() {
-    this.recursive = true
+    this.recursive = true;
   }
 
   result(): analyzerResult {
@@ -54,10 +54,9 @@ class Profiler {
       containsConstantConditions: this.constantConditions,
       usesFunctions: this.usesFunctions,
       usesBreaks: this.breaks,
-      isRecursive: this.recursive
-    }
+      isRecursive: this.recursive,
+    };
   }
 }
 
-
-export default Profiler
+export default Profiler;

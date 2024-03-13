@@ -1,16 +1,18 @@
-import {SyntaxNode as Node} from "tree-sitter"
+import { SyntaxNode as Node } from "tree-sitter";
 
 export default class Condition {
-  nodes: Node[]
+  nodes: Node[];
   constructor(nodes: Node[]) {
-    this.nodes = nodes
+    this.nodes = nodes;
   }
 
   hasVariables() {
-    return this.nodes.some(node => node.type === 'identifier')
+    return this.nodes.some((node) => node.type === "identifier");
   }
 
   variables() {
-    return this.nodes.filter(node => node.type === 'identifier').map(node => node.text)
+    return this.nodes
+      .filter((node) => node.type === "identifier")
+      .map((node) => node.text);
   }
 }

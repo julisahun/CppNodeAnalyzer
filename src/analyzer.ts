@@ -1,8 +1,8 @@
 import Data from "./data/service";
 import parser from "./parser";
-import utils from "./utils";
+import * as utils from "./utils";
 import * as traversers from "./traversers";
-import {SyntaxNode as Node} from "tree-sitter"
+import { SyntaxNode as Node } from "tree-sitter";
 
 export default class Analyzer {
   store: Data;
@@ -18,19 +18,20 @@ export default class Analyzer {
     } catch (e) {
       console.error(e);
     } finally {
-      this.store.leaveScope()
+      this.store.leaveScope();
       return this.store.diagnose();
     }
   }
+
   traverse(node: Node, depth: number = 0) {
-    utils.log(node,depth);
+    utils.log(node, depth);
     if (this.traversers[node.type]) {
       return this.traversers[node.type](node, depth);
     } else {
       node.children.forEach((c) => this.traverse(c, depth + 1));
     }
   }
-  
+
   traversers = {
     declaration: traversers.declarationTraverser.bind(this),
     identifier: traversers.identifierTraverser.bind(this),
@@ -45,6 +46,6 @@ export default class Analyzer {
     function_declarator: traversers.function_declaratorTraverser.bind(this),
     parameter_declaration: traversers.parameter_declarationTraverser.bind(this),
     call_expression: traversers.call_expressionTraverser.bind(this),
+    update_expression: traversers.update_expressionTraverser.bind(this),
   };
 }
-
