@@ -90,6 +90,7 @@ export function function_declaratorTraverser(node: Node, depth: number) {
 export function parameter_declarationTraverser(node: Node, depth: number) {
   const type = node.child(0).text;
   const name = node.child(1).text;
+  node.child(1).children.forEach((c) => this.traverse(c, depth + 1));
   this.store.storeParameter(name, type);
 }
 
