@@ -1,6 +1,8 @@
 import { SyntaxNode as Node } from "tree-sitter";
 
 export function log(node: Node, depth: number): void {
+  if (process.env.NODE_ENV !== "dev") return;
+  
   console.log(depth, node.type, node.text);
 }
 
