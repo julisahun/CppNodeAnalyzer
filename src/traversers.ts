@@ -15,24 +15,23 @@ export function declarationTraverser(node: Node, depth: number) {
 }
 
 export function while_statementTraverser(node: Node, depth: number) {
-  this.store.createScope({ type: "while" });
-  const conditionNode = node.child(1);
+  const conditionNodes = utils.flatten(node.child(1));
+  conditionNodes.forEach((c) => this.traverse(c, depth + 1));
   const bodyNode = node.child(2);
-
-  this.traverse(conditionNode, depth + 1);
+  this.store.createScope({ type: "while" });
+  this.store.storeCondition(conditionNodes);
   this.traverse(bodyNode, depth + 1);
   this.store.leaveScope();
 }
 
 export function for_statementTraverser(node: Node, depth: number) {
-  node.children.forEach((c) => utils.log(c, depth + 1));
   const initializerNode = node.child(2);
   const conditionNodes = utils.flatten(node.child(3));
-  conditionNodes.forEach((c) => this.traverse(c, depth + 1));
   const incrementNode = node.child(5);
   const bodyNode = node.child(7);
   this.store.createScope();
   this.traverse(initializerNode, depth + 1);
+  this.traverse(node.child(3), depth + 1);
   this.store.createScope({ type: "for" });
   this.store.storeCondition(conditionNodes);
   this.traverse(bodyNode, depth + 1);
@@ -42,10 +41,11 @@ export function for_statementTraverser(node: Node, depth: number) {
 }
 
 export function if_statementTraverser(node: Node, depth: number) {
+  this.traverse(node.child(1), depth + 1);
   this.store.createScope({ type: "if" });
-  const conditionNode = node.child(1);
+  const conditionNodes = utils.flatten(node.child(1));
+  this.store.storeCondition(conditionNodes);
   const bodyNode = node.child(2);
-  this.traverse(conditionNode, depth + 1);
   this.traverse(bodyNode, depth + 1);
   this.store.leaveScope();
 }
@@ -58,12 +58,6 @@ export function preproc_includeTraverser(node: Node, depth: number) {
 
 export function compound_statementTraverser(node: Node, depth: number) {
   node.children.forEach((c) => this.traverse(c, depth + 1));
-}
-
-export function condition_clauseTraverser(node: Node, depth: number) {
-  const conditionNodes = utils.flatten(node.child(1));
-  conditionNodes.forEach((c) => this.traverse(c, depth + 1));
-  this.store.storeCondition(conditionNodes);
 }
 
 export function break_statementTraverser(node: Node, depth: number) {

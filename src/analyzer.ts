@@ -38,7 +38,6 @@ export default class Analyzer {
     while_statement: traversers.while_statementTraverser.bind(this),
     for_statement: traversers.for_statementTraverser.bind(this),
     if_statement: traversers.if_statementTraverser.bind(this),
-    condition_clause: traversers.condition_clauseTraverser.bind(this),
     compound_statement: traversers.compound_statementTraverser.bind(this),
     preproc_include: traversers.preproc_includeTraverser.bind(this),
     break_statement: traversers.break_statementTraverser.bind(this),

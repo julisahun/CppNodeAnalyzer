@@ -55,6 +55,7 @@ describe("loops", () => {
       .toString();
     const analyzer: Analyzer = new Analyzer();
     const result: analyzerResult = analyzer.analyze(code);
+    console.log(result)
     expect(result.containsConstantConditions).toEqual(false);
   });
 
