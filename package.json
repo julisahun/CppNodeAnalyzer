@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "babel-plugin-module-resolver": "^5.0.0",
+    "dotenv": "^16.4.5",
     "tree-sitter": "^0.20.6",
     "tree-sitter-cpp": "^0.20.3"
   },

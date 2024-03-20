@@ -5,5 +5,6 @@ export type analyzerResult = {
   containsConstantConditions: boolean;
   usesFunctions: boolean;
   usesBreaks: boolean;
+  usesContinues: boolean;
   isRecursive: boolean;
 };

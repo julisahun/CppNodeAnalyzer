@@ -6,6 +6,7 @@ class Profiler {
   redeclaration: boolean;
   constantConditions: boolean;
   breaks: boolean;
+  continues: boolean;
   usesFunctions: boolean;
   recursive: boolean;
   constructor() {
@@ -14,6 +15,7 @@ class Profiler {
     this.redeclaration = false;
     this.constantConditions = false;
     this.breaks = false;
+    this.continues = false;
     this.usesFunctions = false;
     this.recursive = false;
   }
@@ -38,6 +40,10 @@ class Profiler {
     this.breaks = true;
   }
 
+  registerContinue() {
+    this.continues = true;
+  }
+
   registerFunction() {
     this.usesFunctions = true;
   }
@@ -54,6 +60,7 @@ class Profiler {
       containsConstantConditions: this.constantConditions,
       usesFunctions: this.usesFunctions,
       usesBreaks: this.breaks,
+      usesContinues: this.continues,
       isRecursive: this.recursive,
     };
   }

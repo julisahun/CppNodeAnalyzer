@@ -20,5 +20,6 @@ export function findChild({
   type: string;
 }): Node | undefined {
   let children = flatten(node);
+  if (type === 'else_clause') console.log(children.map(c => c.type))
   return children.find((c: Node) => c.type === type);
 }

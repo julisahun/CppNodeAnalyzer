@@ -83,6 +83,12 @@ class Data {
     }
   }
 
+  continueStatement() {
+    if (this.currentScope instanceof ConditionalScope) {
+      this.profiler.registerContinue();
+    }
+  }
+
   setFunctionName(name: string) {
     if (this.currentScope instanceof FunctionScope) {
       this.currentScope.name = name;
