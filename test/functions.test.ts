@@ -10,7 +10,7 @@ describe("functions", () => {
       .toString();
     const analyzer: Analyzer = new Analyzer();
     const result: analyzerResult = analyzer.analyze(code);
-    expect(result.usesFunctions).toEqual(false);
+    expect(result.analysis.usesFunctions).toEqual(false);
   });
 
   it("should detect function", () => {
@@ -19,7 +19,7 @@ describe("functions", () => {
       .toString();
     const analyzer: Analyzer = new Analyzer();
     const result: analyzerResult = analyzer.analyze(code);
-    expect(result.usesFunctions).toEqual(true);
+    expect(result.analysis.usesFunctions).toEqual(true);
   });
 
   it("should detect non recursive functions", () => {
@@ -28,7 +28,7 @@ describe("functions", () => {
       .toString();
     const analyzer: Analyzer = new Analyzer();
     const result: analyzerResult = analyzer.analyze(code);
-    expect(result.isRecursive).toEqual(false);
+    expect(result.analysis.isRecursive).toEqual(false);
   });
 
   it("should detect recursive functions", () => {
@@ -37,7 +37,7 @@ describe("functions", () => {
       .toString();
     const analyzer: Analyzer = new Analyzer();
     const result: analyzerResult = analyzer.analyze(code);
-    expect(result.isRecursive).toEqual(true);
+    expect(result.analysis.isRecursive).toEqual(true);
   });
 
   it("should detect recursive functions with multiple calls", () => {
@@ -46,6 +46,6 @@ describe("functions", () => {
       .toString();
     const analyzer: Analyzer = new Analyzer();
     const result: analyzerResult = analyzer.analyze(code);
-    expect(result.isRecursive).toEqual(true);
+    expect(result.analysis.isRecursive).toEqual(true);
   });
 });

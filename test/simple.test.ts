@@ -10,7 +10,7 @@ describe("simple", () => {
       .toString();
     const analyzer: Analyzer = new Analyzer();
     const result: analyzerResult = analyzer.analyze(code);
-    expect(result.usedLibraries).toEqual(["iostream", "local library"]);
+    expect(result.analysis.usedLibraries).toEqual(["iostream", "local library"]);
   });
 
   it("should detect unused variable", () => {
@@ -19,7 +19,7 @@ describe("simple", () => {
       .toString();
     const analyzer: Analyzer = new Analyzer();
     const result: analyzerResult = analyzer.analyze(code);
-    expect(result.unUsedVariables).toEqual(["a"]);
+    expect(result.analysis.unUsedVariables).toEqual(["a"]);
   });
 
   it("should detect redeclaration", () => {
@@ -28,7 +28,7 @@ describe("simple", () => {
       .toString();
     const analyzer: Analyzer = new Analyzer();
     const result: analyzerResult = analyzer.analyze(code);
-    expect(result.containsRedeclarations).toBe(true);
+    expect(result.analysis.containsRedeclarations).toBe(true);
   });
 
   it("should not detect used variable", () => {
@@ -37,6 +37,6 @@ describe("simple", () => {
       .toString();
     const analyzer = new Analyzer();
     const result: analyzerResult = analyzer.analyze(code);
-    expect(result.unUsedVariables).toEqual([]);
+    expect(result.analysis.unUsedVariables).toEqual([]);
   });
 });

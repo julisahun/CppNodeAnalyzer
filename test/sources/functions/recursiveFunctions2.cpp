@@ -1,3 +1,5 @@
+int sum(int a);
+
 int sum2(int a) {
     if (a == 0) {
         return 0;

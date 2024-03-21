@@ -10,7 +10,7 @@ describe("conditions", () => {
       .toString();
     const analyzer: Analyzer = new Analyzer();
     const result: analyzerResult = analyzer.analyze(code);
-    expect(result.containsConstantConditions).toEqual(true);
+    expect(result.analysis.containsConstantConditions).toEqual(true);
   });
 
   it("should detect complex constant conditions", () => {
@@ -19,7 +19,7 @@ describe("conditions", () => {
       .toString();
     const analyzer: Analyzer = new Analyzer();
     const result: analyzerResult = analyzer.analyze(code);
-    expect(result.containsConstantConditions).toEqual(true);
+    expect(result.analysis.containsConstantConditions).toEqual(true);
   });
 
   it("should pass variable conditions", () => {
@@ -28,6 +28,6 @@ describe("conditions", () => {
       .toString();
     const analyzer: Analyzer = new Analyzer();
     const result: analyzerResult = analyzer.analyze(code);
-    expect(result.containsConstantConditions).toEqual(false);
+    expect(result.analysis.containsConstantConditions).toEqual(false);
   });
 });

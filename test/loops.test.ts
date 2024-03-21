@@ -10,7 +10,7 @@ describe("loops", () => {
       .toString();
     const analyzer: Analyzer = new Analyzer();
     const result: analyzerResult = analyzer.analyze(code);
-    expect(result.containsConstantConditions).toEqual(false);
+    expect(result.analysis.containsConstantConditions).toEqual(false);
   });
 
   it("should pass updating condition in for loops", () => {
@@ -19,7 +19,7 @@ describe("loops", () => {
       .toString();
     const analyzer: Analyzer = new Analyzer();
     const result: analyzerResult = analyzer.analyze(code);
-    expect(result.containsConstantConditions).toEqual(false);
+    expect(result.analysis.containsConstantConditions).toEqual(false);
   });
 
   it("should detect constant conditions in while loops", () => {
@@ -28,7 +28,7 @@ describe("loops", () => {
       .toString();
     const analyzer: Analyzer = new Analyzer();
     const result: analyzerResult = analyzer.analyze(code);
-    expect(result.containsConstantConditions).toEqual(true);
+    expect(result.analysis.containsConstantConditions).toEqual(true);
   });
 
   it("should detect constant conditions in for loops", () => {
@@ -37,7 +37,7 @@ describe("loops", () => {
       .toString();
     const analyzer: Analyzer = new Analyzer();
     const result: analyzerResult = analyzer.analyze(code);
-    expect(result.containsConstantConditions).toEqual(true);
+    expect(result.analysis.containsConstantConditions).toEqual(true);
   });
 
   it("should detect breaks in while loops", () => {
@@ -46,7 +46,7 @@ describe("loops", () => {
       .toString();
     const analyzer: Analyzer = new Analyzer();
     const result: analyzerResult = analyzer.analyze(code);
-    expect(result.usesBreaks).toEqual(true);
+    expect(result.analysis.usesBreaks).toEqual(true);
   });
 
   it("should pass constant conditions in while loops with breaks", () => {
@@ -55,7 +55,7 @@ describe("loops", () => {
       .toString();
     const analyzer: Analyzer = new Analyzer();
     const result: analyzerResult = analyzer.analyze(code);
-    expect(result.containsConstantConditions).toEqual(false);
+    expect(result.analysis.containsConstantConditions).toEqual(false);
   });
 
   it("should detect breaks in for loops", () => {
@@ -64,7 +64,7 @@ describe("loops", () => {
       .toString();
     const analyzer: Analyzer = new Analyzer();
     const result: analyzerResult = analyzer.analyze(code);
-    expect(result.usesBreaks).toEqual(true);
+    expect(result.analysis.usesBreaks).toEqual(true);
   });
 
   it("should pass constant conditions in for loops with breaks", () => {
@@ -73,6 +73,6 @@ describe("loops", () => {
       .toString();
     const analyzer: Analyzer = new Analyzer();
     const result: analyzerResult = analyzer.analyze(code);
-    expect(result.containsConstantConditions).toEqual(false);
+    expect(result.analysis.containsConstantConditions).toEqual(false);
   });
 });

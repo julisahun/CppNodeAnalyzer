@@ -52,7 +52,7 @@ class Profiler {
     this.recursive = true;
   }
 
-  result(): analyzerResult {
+  result() {
     return {
       usedLibraries: this.libraries,
       unUsedVariables: this.unUsedVariables,

@@ -10,7 +10,7 @@ describe("scopes", () => {
       .toString();
     const analyzer: Analyzer = new Analyzer();
     const result: analyzerResult = analyzer.analyze(code);
-    expect(result.unUsedVariables).toEqual([]);
+    expect(result.analysis.unUsedVariables).toEqual([]);
   });
 
   it("should detect redeclarations across scopes", () => {
@@ -19,6 +19,6 @@ describe("scopes", () => {
       .toString();
     const analyzer: Analyzer = new Analyzer();
     const result: analyzerResult = analyzer.analyze(code);
-    expect(result.containsRedeclarations).toEqual(true);
+    expect(result.analysis.containsRedeclarations).toEqual(true);
   });
 });

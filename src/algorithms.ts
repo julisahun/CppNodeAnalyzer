@@ -10,22 +10,22 @@ export function isRecursive(dependencies: {
       acc[curr] = 0;
       return acc;
     },
-    {},
+    {}
   );
-  let visited: number = 0;
   // calculate in-degree of each vertex
   for (const fun in dependencies) {
     for (let calls of dependencies[fun]) {
       inDegree[calls]++;
     }
   }
-
+  
   // enqueue vertices with 0 in-degree
-
+  
   let q = Object.entries(inDegree)
-    .filter(([_, inDegree]) => inDegree === 0)
-    .map(([functionName, _]) => functionName);
-
+  .filter(([_, inDegree]) => inDegree === 0)
+  .map(([functionName, _]) => functionName);
+  
+  let visited: number = 0;
   // BFS traversal
   while (q.length > 0) {
     const u = q.shift();
