@@ -66,7 +66,7 @@ export class ReWriter {
       if (startA.row !== startB.row) {
         return startA.row - startB.row;
       } else {
-        return startA.column - startB.column;
+        return startB.column - startA.column;
       }
     });
     for (let token of this.tokens) {
