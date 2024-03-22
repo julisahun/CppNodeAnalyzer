@@ -37,9 +37,7 @@ export class ReWriter {
 
   useToken({ node }: { node: Node }): void {
     if (!this.tokensMap[node.text])
-      throw new Error(
-        `Token ${node.text} not found, please user storeToken first.`,
-      );
+      throw new Error(`Token ${node.text} not found, please user storeToken first.`);
     if (this.tokensMap[node.text]) {
       this.tokens.push({
         start: node.startPosition,
@@ -64,12 +62,12 @@ export class ReWriter {
 
   rewrite(code: string) {
     let rows = code.split("\n");
-    this.tokens.sort((tokenA, tokenB) => {
-      if (tokenA.start.row < tokenB.start.row) return -1;
-      if (tokenA.start.row > tokenB.start.row) return 1;
-      if (tokenA.start.column > tokenB.start.column) return -1;
-      if (tokenA.start.column < tokenB.start.column) return 1;
-      return 0;
+    this.tokens.sort(({ start: startA }, { start: startB }) => {
+      if (startA.row !== startB.row) {
+        return startA.row - startB.row;
+      } else {
+        return startA.column - startB.column;
+      }
     });
     for (let token of this.tokens) {
       let row = token.start.row;
