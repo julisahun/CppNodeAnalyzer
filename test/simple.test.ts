@@ -1,42 +1,24 @@
 import "./tests";
-import Analyzer from "../src/analyzer";
-import fs from "fs";
-import { analyzerResult } from "../src/data/types";
+import { analyze } from "./tests";
 
 describe("simple", () => {
   it("should detect includes", () => {
-    const code: string = fs
-      .readFileSync("test/sources/simple/includes.cpp")
-      .toString();
-    const analyzer: Analyzer = new Analyzer();
-    const result: analyzerResult = analyzer.analyze(code);
+    const result = analyze("simple/includes.cpp");
     expect(result.analysis.usedLibraries).toEqual(["iostream", "local library"]);
   });
 
   it("should detect unused variable", () => {
-    const code: string = fs
-      .readFileSync("test/sources/simple/unusedVariable.cpp")
-      .toString();
-    const analyzer: Analyzer = new Analyzer();
-    const result: analyzerResult = analyzer.analyze(code);
+    const result = analyze("simple/unusedVariable.cpp");
     expect(result.analysis.unUsedVariables).toEqual(["a"]);
   });
 
   it("should detect redeclaration", () => {
-    const code: string = fs
-      .readFileSync("test/sources/simple/redeclaration.cpp")
-      .toString();
-    const analyzer: Analyzer = new Analyzer();
-    const result: analyzerResult = analyzer.analyze(code);
+    const result = analyze("simple/redeclaration.cpp");
     expect(result.analysis.containsRedeclarations).toBe(true);
   });
 
   it("should not detect used variable", () => {
-    const code = fs
-      .readFileSync("test/sources/simple/usedVariable.cpp")
-      .toString();
-    const analyzer = new Analyzer();
-    const result: analyzerResult = analyzer.analyze(code);
+    const result = analyze("simple/usedVariable.cpp");
     expect(result.analysis.unUsedVariables).toEqual([]);
   });
 });

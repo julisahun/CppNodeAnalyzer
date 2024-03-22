@@ -1,24 +1,14 @@
 import "./tests";
-import Analyzer from "../src/analyzer";
-import fs from "fs";
-import { analyzerResult } from "../src/data/types";
+import { analyze } from "./tests";
 
 describe("scopes", () => {
   it("should detect usage across scopes", () => {
-    const code: string = fs
-      .readFileSync("test/sources/scopes/usedVariable.cpp")
-      .toString();
-    const analyzer: Analyzer = new Analyzer();
-    const result: analyzerResult = analyzer.analyze(code);
+    const result = analyze("scopes/usedVariable.cpp");
     expect(result.analysis.unUsedVariables).toEqual([]);
   });
 
   it("should detect redeclarations across scopes", () => {
-    const code: string = fs
-      .readFileSync("test/sources/scopes/redeclaration.cpp")
-      .toString();
-    const analyzer: Analyzer = new Analyzer();
-    const result: analyzerResult = analyzer.analyze(code);
+    const result = analyze("scopes/redeclaration.cpp");
     expect(result.analysis.containsRedeclarations).toEqual(true);
   });
 });
