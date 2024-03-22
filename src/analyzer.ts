@@ -8,7 +8,7 @@ import { analyzerResult } from "./data/types";
 
 export default class Analyzer {
   store: Data;
-  rewriter: ReWriter
+  rewriter: ReWriter;
   constructor() {
     this.store = new Data();
     this.rewriter = new ReWriter();
@@ -26,8 +26,8 @@ export default class Analyzer {
       let result = {
         analysis: this.store.diagnose(),
         categoricalCode: this.rewriter.rewrite(code),
-      }
-      return result
+      };
+      return result;
     }
   }
 

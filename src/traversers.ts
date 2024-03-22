@@ -1,7 +1,7 @@
 import { SyntaxNode as Node } from "tree-sitter";
 import * as utils from "./utils";
 
-const reservedIdentifiers = ["cin", "cout", 'endl'];
+const reservedIdentifiers = ["cin", "cout", "endl"];
 
 export function identifierTraverser(node: Node, depth: number) {
   const name = node.text;
@@ -104,9 +104,7 @@ export function parameter_declarationTraverser(node: Node, depth: number) {
 }
 
 export function call_expressionTraverser(node: Node, depth: number) {
-  const nameNode = utils.findChild({node,
-    type: "identifier",
-  });
+  const nameNode = utils.findChild({ node, type: "identifier" });
   this.store.registerCall(nameNode.text);
   node.children.forEach((c) => this.traverse(c, depth + 1));
 }

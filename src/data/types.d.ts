@@ -8,8 +8,6 @@ export type analyzerResult = {
     usesBreaks: boolean;
     usesContinues: boolean;
     isRecursive: boolean;
-  }
+  };
   categoricalCode: string;
 };
-
-

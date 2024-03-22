@@ -8,7 +8,8 @@
     "clean": "tsc --build --clean",
     "test": "jest --maxConcurrency=1",
     "test-all": "node scripts/run-tests.js",
-    "analyze": "ts-node index.ts"
+    "analyze": "ts-node index.ts",
+    "fmt": "prettier --write ."
   },
   "dependencies": {
     "babel-plugin-module-resolver": "^5.0.0",

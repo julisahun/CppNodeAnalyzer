@@ -6,7 +6,7 @@ const config: Config.InitialOptions = {
     "^.+\\.js$": "babel-jest",
     "^.+\\.tsx?$": "ts-jest",
   },
-  setupFiles: ["<rootDir>/.jest/setEnvVars.js"]
+  setupFiles: ["<rootDir>/.jest/setEnvVars.js"],
 };
 
 export default config;
