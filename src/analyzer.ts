@@ -1,5 +1,6 @@
 import Data from "./data/service";
 import { ReWriter } from "./rewriter";
+import Formatter from "./formatter";
 import parser from "./parser";
 import * as utils from "./utils";
 import * as traversers from "./traversers";
@@ -9,35 +10,44 @@ import { analyzerResult } from "./data/types";
 export default class Analyzer {
   store: Data;
   rewriter: ReWriter;
+  formatter: Formatter;
   constructor() {
     this.store = new Data();
     this.rewriter = new ReWriter();
+    this.formatter = new Formatter();
   }
   analyze(code: string): analyzerResult {
     const tree = parser.parse(code);
     const rootNode = tree.rootNode;
     this.store.createScope({ type: "global" });
     try {
-      this.traverse(rootNode);
+      let categoricalCode = this.traverse(rootNode);
+      let result = {
+        analysis: this.store.diagnose(),
+        categoricalCode//this.rewriter.rewrite(code),
+      };
+      return result;
     } catch (e) {
       console.error(e);
     } finally {
+      // console.log("Analysis complete.")
+      // this.formatter.print();
       this.store.leaveScope();
-      let result = {
-        analysis: this.store.diagnose(),
-        categoricalCode: this.rewriter.rewrite(code),
-      };
-      return result;
+      
     }
   }
 
   traverse(node: Node, depth: number = 0) {
     utils.log(node, depth);
+    let formattedCode: string;
     if (this.traversers[node.type]) {
-      return this.traversers[node.type](node, depth);
+      formattedCode = this.traversers[node.type](node, depth);
+    } else if (node.children.length) {
+      formattedCode = node.children.map((c) => this.traverse(c, depth + 1)).join('');
     } else {
-      node.children.forEach((c) => this.traverse(c, depth + 1));
+      formattedCode = node.text;
     }
+    return formattedCode;
   }
 
   traversers = {
@@ -47,6 +57,7 @@ export default class Analyzer {
     for_statement: traversers.for_statementTraverser.bind(this),
     if_statement: traversers.if_statementTraverser.bind(this),
     compound_statement: traversers.compound_statementTraverser.bind(this),
+    condition_clause: traversers.condition_clauseTraverser.bind(this),
     preproc_include: traversers.preproc_includeTraverser.bind(this),
     break_statement: traversers.break_statementTraverser.bind(this),
     continue_statement: traversers.continue_statementTraverser.bind(this),
@@ -54,8 +65,8 @@ export default class Analyzer {
     function_declarator: traversers.function_declaratorTraverser.bind(this),
     parameter_declaration: traversers.parameter_declarationTraverser.bind(this),
     call_expression: traversers.call_expressionTraverser.bind(this),
-    update_expression: traversers.update_expressionTraverser.bind(this),
     using_declaration: traversers.using_declarationTraverser.bind(this),
     else_clause: traversers.else_clauseTraverser.bind(this),
+    return_statement: traversers.return_statementTraverser.bind(this),
   };
 }

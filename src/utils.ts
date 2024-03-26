@@ -5,21 +5,31 @@ export function log(node: Node, depth: number): void {
   console.log(depth, node.type, node.text);
 }
 
-export function flatten(node: Node): Node[] {
+export function logChildren(node: Node, depth: number): void {
+  node.children.forEach((c) => log(c, depth + 1));
+}
+
+export function flatten(node: Node, notFrom?: string): Node[] {
+  if (node.type === notFrom) return []
   if (node.children.length === 0) {
     return [node];
   }
-  return node.children.flatMap(flatten);
+  return node.children.flatMap(n => flatten(n, notFrom));
 }
 
-export function findChild({
+export function findChildren({
   node,
   type,
+  notFrom
 }: {
   node: Node;
   type: string;
-}): Node | undefined {
-  let children = flatten(node);
-  if (type === "else_clause") console.log(children.map((c) => c.type));
-  return children.find((c: Node) => c.type === type);
+  notFrom?: string;
+}): Node[] {
+  let children = flatten(node, notFrom);
+  return children.filter((c: Node) => c.type === type);
+}
+
+export function findChild({ node, type, notFrom }: { node: Node; type: string; notFrom?: string }): Node {
+  return findChildren({ node, type, notFrom })[0];
 }
