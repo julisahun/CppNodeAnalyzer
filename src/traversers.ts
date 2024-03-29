@@ -8,16 +8,15 @@ export function identifierTraverser(node: Node, depth: number) {
   if (!reservedIdentifiers.includes(name)) {
     this.store.useVariable(name);
   }
-  return name;
+  return this.rewriter.mapToken(name);
 }
 
 export function declarationTraverser(node: Node, depth: number) {
+  const { mappedName, name } = this.rewriter.tokenizeIdentifier(node);
   let children = node.children.map((c) => this.traverse(c, depth + 1));
   const type = children.shift();
-  let nameNode = utils.findChild({ node: node.child(1), type: "identifier" });
-
-  this.store.declareVariable(nameNode.text, type);
-  return `${type} ${children.join('')}`;
+  this.store.declareVariable(name, type);
+  return `${type} ${children.join('').replace(name, mappedName)}`;
 }
 
 export function while_statementTraverser(node: Node, depth: number) {
@@ -39,7 +38,7 @@ export function for_statementTraverser(node: Node, depth: number) {
   let postScopeChildren = node.children.slice(4).map(n => this.traverse(n, depth + 1));
   this.store.leaveScope();
   this.store.leaveScope();
-  return `${[...preScopeChildren,...postScopeChildren].join('')}`;
+  return `${[...preScopeChildren, ...postScopeChildren].join('')}`;
 }
 
 export function if_statementTraverser(node: Node, depth: number) {
@@ -92,34 +91,38 @@ export function continue_statementTraverser(node: Node, depth: number) {
 }
 
 export function function_definitionTraverser(node: Node, depth: number) {
+  const name = utils.findChild({ node: node.child(1), type: "identifier" }).text;
+  let mappedName: string;
+  if (this.rewriter.isAlreadyMapped(name)) {
+    mappedName = this.rewriter.mapToken(name);
+  } else {
+    mappedName = this.rewriter.registerToken(name, "function");
+  }
   this.store.createScope({ type: "function" });
   let children = node.children.map((c) => this.traverse(c, depth + 1));
   const type = children.shift();
   this.store.leaveScope();
-  return `${type} ${children.join('')}`;
+  return `${type} ${children.join('').replace(name, mappedName)}`;
 }
 
 export function function_declaratorTraverser(node: Node, depth: number) {
   let children = node.children.map((c) => this.traverse(c, depth + 1));
-  const name = children.shift();
+  const name = this.rewriter.unMapToken(children.shift());
   this.store.setFunctionName(name);
   return `${name}${children.join(',')}`;
 }
 
 export function parameter_declarationTraverser(node: Node, depth: number) {
+  const { mappedName, name } = this.rewriter.tokenizeIdentifier(node);
   let children = node.children.map((c) => this.traverse(c, depth + 1));
   const type = children.shift();
-  const [nameNode] = utils.findChildren({
-    node: node.child(1),
-    type: "identifier",
-  });
-  this.store.storeParameter(nameNode.text, type);
-  return `${type} ${children.join('')}`;
+  this.store.storeParameter(name, type);
+  return `${type} ${children.join('').replace(name, mappedName)}`;
 }
 
 export function call_expressionTraverser(node: Node, depth: number) {
   let children = node.children.map((c) => this.traverse(c, depth + 1));
-  const name = children[0];
+  const name = this.rewriter.unMapToken(children[0]);
   this.store.registerCall(name);
   return children.join('');
 }
@@ -144,7 +147,8 @@ export function return_statementTraverser(node: Node, depth: number) {
 }
 
 export function condition_clauseTraverser(node: Node, depth: number) {
-  return node.text;
+  let children = node.children.map((c) => this.traverse(c, depth + 1));
+  return children.join('');
 }
 
 

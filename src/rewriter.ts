@@ -1,50 +1,46 @@
 import { SyntaxNode as Node } from "tree-sitter";
-
-type Position = {
-  row: number;
-  column: number;
-};
-
-type Token = {
-  start: Position;
-  end: Position;
-  name: string;
-};
+import * as utils from "./utils";
 
 export class ReWriter {
-  tokens: Token[];
   variablesCounter: number;
   functionsCounter: number;
   classesCounter: number;
   tokensMap: { [key: string]: string };
+  reverseTokensMap: { [key: string]: string };
   constructor() {
     this.tokensMap = {};
-    this.tokens = [];
+    this.reverseTokensMap = {};
     this.variablesCounter = 0;
     this.functionsCounter = 0;
     this.classesCounter = 0;
   }
 
-  storeToken({ node, type }: { node: Node; type: string }): void {
-    const mappedTokenName = this.getName(type, node.text);
-    this.tokensMap[node.text] = mappedTokenName;
-    this.tokens.push({
-      start: node.startPosition,
-      end: node.endPosition,
-      name: mappedTokenName,
-    });
+  tokenizeIdentifier(node: Node) {
+    const isFunction = node.type === 'function_declarator' || node.children.some((c) => c.type === "function_declarator");
+    const name = utils.findChild({ node: node.child(1), type: "identifier" }).text;
+    return { name, mappedName: this.registerToken(name, isFunction ? "function" : "variable") };
   }
 
-  useToken({ node }: { node: Node }): void {
-    if (!this.tokensMap[node.text])
-      throw new Error(`Token ${node.text} not found, please user storeToken first.`);
-    if (this.tokensMap[node.text]) {
-      this.tokens.push({
-        start: node.startPosition,
-        end: node.endPosition,
-        name: this.tokensMap[node.text],
-      });
-    }
+  registerToken(name: string, type: string) {
+    if (name === 'main' && type === 'function') return 'main';
+    const mappedToken = this.getName(type, name);
+    this.tokensMap[name] = mappedToken;
+    this.reverseTokensMap[mappedToken] = name;
+    return mappedToken;
+  }
+
+  mapToken(name: string) {
+    if (!this.tokensMap[name]) return name;
+    return this.tokensMap[name];
+  }
+
+  unMapToken(name: string) {
+    if (!this.reverseTokensMap[name]) return name;
+    return this.reverseTokensMap[name];
+  }
+
+  isAlreadyMapped(name: string) {
+    return name in this.tokensMap;
   }
 
   getName(type: string, name: string): string {
@@ -59,25 +55,5 @@ export class ReWriter {
         return name;
     }
   }
-
-  rewrite(code: string) {
-    let rows = code.split("\n");
-    this.tokens.sort(({ start: startA }, { start: startB }) => {
-      if (startA.row !== startB.row) {
-        return startA.row - startB.row;
-      } else {
-        return startB.column - startA.column;
-      }
-    });
-    for (let token of this.tokens) {
-      let row = token.start.row;
-      let start = token.start.column;
-      let end = token.end.column;
-      let name = token.name;
-      let line = rows[row];
-      let newLine = line.substring(0, start) + name + line.substring(end);
-      rows[row] = newLine;
-    }
-    return rows.join("\n");
-  }
 }
+
