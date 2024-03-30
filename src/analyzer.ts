@@ -1,6 +1,5 @@
 import Data from "./data/service";
-import { ReWriter } from "./rewriter";
-import Formatter from "./formatter";
+import { Formatter } from "./formatter";
 import parser from "./parser";
 import * as utils from "./utils";
 import * as traversers from "./traversers";
@@ -9,11 +8,9 @@ import { analyzerResult } from "./data/types";
 
 export default class Analyzer {
   store: Data;
-  rewriter: ReWriter;
   formatter: Formatter;
   constructor() {
     this.store = new Data();
-    this.rewriter = new ReWriter();
     this.formatter = new Formatter();
   }
   analyze(code: string): analyzerResult {
@@ -21,17 +18,15 @@ export default class Analyzer {
     const rootNode = tree.rootNode;
     this.store.createScope({ type: "global" });
     try {
-      let categoricalCode = this.traverse(rootNode);
+      let formattedCode = this.traverse(rootNode);
       let result = {
         analysis: this.store.diagnose(),
-        categoricalCode//this.rewriter.rewrite(code),
+        formattedCode
       };
       return result;
     } catch (e) {
       console.error(e);
     } finally {
-      // console.log("Analysis complete.")
-      // this.formatter.print();
       this.store.leaveScope();
       
     }

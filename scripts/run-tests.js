@@ -1,24 +1,23 @@
-const { execSync } = require("child_process");
+const util = require('node:util');
+const exec = util.promisify(require('node:child_process').exec);
 
 const testFiles = {
   analyzer: ["simple", "condition", "loops", "functions", "scopes"],
-  rewritter: ["variables", "functions"]
+  formatter: ["variables", "functions"]
 };
 
-const runTests = () => {
+const runTests = async () => {
   for (module in testFiles) {
     const moduleTests = testFiles[module];
-    moduleTests.forEach((testFile) => {
-      try {
-        execSync(`npm test ${module}/${testFile}`, { stdio: "inherit" });
-      } catch (error) {
-        console.error(
-          `Error occurred while running tests in ${testFile}:`,
-          error,
-        );
-        process.exit(1);
-      }
-    });
+    const results = await Promise.allSettled(moduleTests.map(async testFile =>
+      exec(`npm test ${module}/${testFile}`, { stdio: "inherit" })
+    ));
+    const failedTests = results.map((result, index) => ({...result, test: moduleTests[index]})).filter(result => result.status === "rejected");
+    if (failedTests.length > 0) {
+      console.error(`Failed tests for ${module}:`);
+      failedTests.forEach(({test, reason}) => console.error(`- ${test}: ${reason}`));
+      process.exit(1);
+    }
   }
 };
 

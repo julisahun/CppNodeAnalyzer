@@ -8,11 +8,11 @@ export function identifierTraverser(node: Node, depth: number) {
   if (!reservedIdentifiers.includes(name)) {
     this.store.useVariable(name);
   }
-  return this.rewriter.mapToken(name);
+  return this.formatter.mapToken(name);
 }
 
 export function declarationTraverser(node: Node, depth: number) {
-  const { mappedName, name } = this.rewriter.tokenizeIdentifier(node);
+  const { mappedName, name } = this.formatter.tokenizeIdentifier(node);
   let children = node.children.map((c) => this.traverse(c, depth + 1));
   const type = children.shift();
   this.store.declareVariable(name, type);
@@ -93,10 +93,10 @@ export function continue_statementTraverser(node: Node, depth: number) {
 export function function_definitionTraverser(node: Node, depth: number) {
   const name = utils.findChild({ node: node.child(1), type: "identifier" }).text;
   let mappedName: string;
-  if (this.rewriter.isAlreadyMapped(name)) {
-    mappedName = this.rewriter.mapToken(name);
+  if (this.formatter.isAlreadyMapped(name)) {
+    mappedName = this.formatter.mapToken(name);
   } else {
-    mappedName = this.rewriter.registerToken(name, "function");
+    mappedName = this.formatter.registerToken(name, "function");
   }
   this.store.createScope({ type: "function" });
   let children = node.children.map((c) => this.traverse(c, depth + 1));
@@ -107,13 +107,13 @@ export function function_definitionTraverser(node: Node, depth: number) {
 
 export function function_declaratorTraverser(node: Node, depth: number) {
   let children = node.children.map((c) => this.traverse(c, depth + 1));
-  const name = this.rewriter.unMapToken(children.shift());
+  const name = this.formatter.unMapToken(children.shift());
   this.store.setFunctionName(name);
   return `${name}${children.join(',')}`;
 }
 
 export function parameter_declarationTraverser(node: Node, depth: number) {
-  const { mappedName, name } = this.rewriter.tokenizeIdentifier(node);
+  const { mappedName, name } = this.formatter.tokenizeIdentifier(node);
   let children = node.children.map((c) => this.traverse(c, depth + 1));
   const type = children.shift();
   this.store.storeParameter(name, type);
@@ -122,7 +122,7 @@ export function parameter_declarationTraverser(node: Node, depth: number) {
 
 export function call_expressionTraverser(node: Node, depth: number) {
   let children = node.children.map((c) => this.traverse(c, depth + 1));
-  const name = this.rewriter.unMapToken(children[0]);
+  const name = this.formatter.unMapToken(children[0]);
   this.store.registerCall(name);
   return children.join('');
 }

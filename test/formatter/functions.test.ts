@@ -1,9 +1,9 @@
 import { analyze } from "../tests";
 
 describe("should rewrite functions", () => {
-  const path = "rewritter/functions";
+  const path = "formatter/functions";
   it("should rewrite function declaration", () => {
     const result = analyze(`${path}/declaration.cpp`);
-    expect(result.categoricalCode).toEqual(`int f0();`);
+    expect(result.formattedCode).toEqual(`int f01();`);
   });
 });
