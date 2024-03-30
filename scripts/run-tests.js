@@ -3,7 +3,7 @@ const exec = util.promisify(require('node:child_process').exec);
 
 const testFiles = {
   analyzer: ["simple", "condition", "loops", "functions", "scopes"],
-  formatter: ["variables", "functions"]
+  formatter: ["variables", "functions", "scopes"]
 };
 
 const runTests = async () => {
@@ -17,6 +17,8 @@ const runTests = async () => {
       console.error(`Failed tests for ${module}:`);
       failedTests.forEach(({test, reason}) => console.error(`- ${test}: ${reason}`));
       process.exit(1);
+    } else {
+      console.log(`All tests for ${module} passed!\u{2705}`);
     }
   }
 };
