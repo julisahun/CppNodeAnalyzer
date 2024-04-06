@@ -58,7 +58,7 @@ export function if_statementTraverser(node: Node, depth: number) {
 export function preproc_includeTraverser(node: Node, depth: number) {
   let [include, library] = node.children.map((c) => this.traverse(c, depth + 1));
   this.store.registerInclude(library);
-  return `${include} ${library} \n`;
+  return `${include} ${library}\n`;
 }
 
 export function compound_statementTraverser(node: Node, depth: number) {
@@ -148,6 +148,26 @@ export function return_statementTraverser(node: Node, depth: number) {
 
 export function condition_clauseTraverser(node: Node, depth: number) {
   let children = node.children.map((c) => this.traverse(c, depth + 1));
+  return children.join('');
+}
+
+export function translation_unitTraverser(node: Node, depth: number) {
+  let { includeChildren, nonIncludeChildren } = node.children.reduce((acc, children) => {
+    if (children.type === "preproc_include") {
+      acc.includeChildren.push(children);
+    } else {
+      acc.nonIncludeChildren.push(children);
+    }
+    return acc;
+  }, { includeChildren: [], nonIncludeChildren: [] });
+
+  let sortedIncludes = includeChildren.sort((nodeA, nodeB) => {
+    return nodeA.text < nodeB.text ? -1 : 1;
+  })
+  let nonDuplicateIncludes = sortedIncludes.filter((node, index, array) => {
+    return index === 0 || node.text.replace('\n', '') !== array[index - 1].text.replace('\n', '');
+  });
+  let children = [...nonDuplicateIncludes, ...nonIncludeChildren].map((c) => this.traverse(c, depth + 1));
   return children.join('');
 }
 

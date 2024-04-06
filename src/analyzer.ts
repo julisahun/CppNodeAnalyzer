@@ -63,5 +63,6 @@ export default class Analyzer {
     using_declaration: traversers.using_declarationTraverser.bind(this),
     else_clause: traversers.else_clauseTraverser.bind(this),
     return_statement: traversers.return_statementTraverser.bind(this),
+    translation_unit: traversers.translation_unitTraverser.bind(this),
   };
 }
