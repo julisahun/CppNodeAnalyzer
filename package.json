@@ -11,7 +11,7 @@
   "scripts": {
     "build": "tsup",
     "clean": "tsc --build --clean",
-    "test": "jest --maxConcurrency=1",
+    "test": "jest",
     "test-all": "node scripts/run-tests.js",
     "analyze": "ts-node index.ts",
     "fmt": "prettier --write ."

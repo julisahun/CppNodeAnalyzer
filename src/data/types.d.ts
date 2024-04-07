@@ -9,5 +9,5 @@ export type analyzerResult = {
     usesContinues: boolean;
     isRecursive: boolean;
   };
-  categoricalCode: string;
+  formattedCode: string;
 };
