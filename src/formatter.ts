@@ -16,13 +16,24 @@ export class Formatter {
   }
 
   tokenizeIdentifier(node: Node) {
-    const isFunction = node.type === 'function_declarator' || node.children.some((c) => c.type === "function_declarator");
-    const name = utils.findChild({ node: node.child(1), type: "identifier" }).text;
-    return { name, mappedName: this.registerToken(name, isFunction ? "function" : "variable") };
+    const isFunction =
+      node.type === "function_declarator" ||
+      node.children.some((c) => c.type === "function_declarator");
+    const name = utils.findChild({
+      node: node.child(1),
+      type: "identifier",
+    }).text;
+    return {
+      name,
+      mappedName: this.registerToken(
+        name,
+        isFunction ? "function" : "variable",
+      ),
+    };
   }
 
   registerToken(name: string, type: string) {
-    if (name === 'main' && type === 'function') return 'main';
+    if (name === "main" && type === "function") return "main";
     const mappedToken = this.getName(type, name);
     this.tokensMap[name] = mappedToken;
     this.reverseTokensMap[mappedToken] = name;
@@ -56,4 +67,3 @@ export class Formatter {
     }
   }
 }
-

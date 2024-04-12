@@ -21,14 +21,13 @@ export default class Analyzer {
       let formattedCode = this.traverse(rootNode);
       let result = {
         analysis: this.store.diagnose(),
-        formattedCode
+        formattedCode,
       };
       return result;
     } catch (e) {
       console.error(e);
     } finally {
       this.store.leaveScope();
-      
     }
   }
 
@@ -38,7 +37,9 @@ export default class Analyzer {
     if (this.traversers[node.type]) {
       formattedCode = this.traversers[node.type](node, depth);
     } else if (node.children.length) {
-      formattedCode = node.children.map((c) => this.traverse(c, depth + 1)).join('');
+      formattedCode = node.children
+        .map((c) => this.traverse(c, depth + 1))
+        .join("");
     } else {
       formattedCode = node.text;
     }

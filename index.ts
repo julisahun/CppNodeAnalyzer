@@ -3,7 +3,6 @@ import * as dotenv from "dotenv";
 import fs from "fs";
 dotenv.config();
 
-
 const analyze = () => {
   const code = fs.readFileSync(`code.cpp`).toString();
   const analyzer = new Analyzer();
@@ -11,6 +10,5 @@ const analyze = () => {
 };
 
 console.log(analyze());
-
 
 module.exports = Analyzer;

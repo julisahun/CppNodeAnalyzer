@@ -14,11 +14,15 @@ describe("should rewrite functions", () => {
 
   it("should format function with parameters", () => {
     const result = analyze(`${path}/parameters.cpp`);
-    expect(result.formattedCode).toEqual(`int f0(int v0,int v1){return v0+v1;}`);
+    expect(result.formattedCode).toEqual(
+      `int f0(int v0,int v1){return v0+v1;}`,
+    );
   });
 
   it("should format function with calls", () => {
     const result = analyze(`${path}/calling.cpp`);
-    expect(result.formattedCode).toEqual(`int f0();int f1();int f0(){return f1();}`);
+    expect(result.formattedCode).toEqual(
+      `int f0();int f1();int f0(){return f1();}`,
+    );
   });
 });

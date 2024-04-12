@@ -9,6 +9,7 @@ class Profiler {
   continues: boolean;
   usesFunctions: boolean;
   recursive: boolean;
+
   constructor() {
     this.libraries = [];
     this.unUsedVariables = [];

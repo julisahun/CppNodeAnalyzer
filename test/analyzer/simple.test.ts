@@ -5,7 +5,10 @@ describe("simple", () => {
   const path = "analyzer/simple";
   it("should detect includes", () => {
     const result = analyze(`${path}/includes.cpp`);
-    expect(result.analysis.usedLibraries).toEqual(["local library", "iostream"]);
+    expect(result.analysis.usedLibraries).toEqual([
+      "local library",
+      "iostream",
+    ]);
   });
 
   it("should detect unused variable", () => {
