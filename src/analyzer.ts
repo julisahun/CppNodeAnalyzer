@@ -5,6 +5,7 @@ import * as utils from "./utils";
 import * as traversers from "./traversers";
 import { SyntaxNode as Node } from "tree-sitter";
 import { analyzerResult } from "./data/types";
+import { preprocess } from "./preprocessor";
 
 export default class Analyzer {
   store: Data;
@@ -14,6 +15,7 @@ export default class Analyzer {
     this.formatter = new Formatter();
   }
   analyze(code: string): analyzerResult {
+    code = preprocess(code);
     const tree = parser.parse(code);
     const rootNode = tree.rootNode;
     this.store.createScope({ type: "global" });
