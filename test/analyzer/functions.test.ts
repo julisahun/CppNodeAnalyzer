@@ -26,4 +26,16 @@ describe("functions", () => {
     const result = analyze(`${path}/recursiveFunctions2.cpp`);
     expect(result.analysis.isRecursive).toEqual(true);
   });
+
+  it("should detect function signature", () => {
+    const result = analyze(`${path}/signature.cpp`)
+    const functions = result.analysis.functions;
+    expect(Object.keys(functions)).toEqual(["functionName"])
+    expect(functions.functionName.parameters).toEqual([
+      { name: 'a', type: 'int' },
+      { name: 'b', type: 'bool' },
+      { name: 'c', type: 'char' },
+      { name: 'd', type: 'long' }
+    ])
+  })
 });

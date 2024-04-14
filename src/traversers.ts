@@ -123,10 +123,10 @@ export function function_definitionTraverser(node: Node, depth: number) {
 }
 
 export function function_declaratorTraverser(node: Node, depth: number) {
-  let children = node.children.map((c) => this.traverse(c, depth + 1));
-  const name = this.formatter.unMapToken(children.shift());
+  const name = this.formatter.unMapToken(this.traverse(node.child(0)));
   this.store.setFunctionName(name);
-  return `${name}${children.join(",")}`;
+  let remainingChildren = node.children.slice(1).map((c) => this.traverse(c, depth + 1));
+  return `${name}${remainingChildren.join(',')}`;
 }
 
 export function parameter_declarationTraverser(node: Node, depth: number) {

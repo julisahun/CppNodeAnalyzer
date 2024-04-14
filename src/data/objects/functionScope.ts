@@ -1,7 +1,8 @@
 import Scope from "./scope";
+import Variable from "./variable";
 
 export default class functionScope extends Scope {
-  parameters: string[];
+  parameters: Variable[];
   returnType: string;
   name: string;
   calls: string[];
@@ -12,9 +13,15 @@ export default class functionScope extends Scope {
     (this.name = null), (this.calls = []);
   }
 
-  addParameter(name: string, type: string) {}
+  addParameter(name: string, type: string) {
+    this.parameters.push(new Variable(name, type));
+  }
 
   registerCall(name: string) {
     this.calls.push(name);
+  }
+
+  getParameters() {
+    return this.parameters.map(({name, type}) => ({name, type}))
   }
 }

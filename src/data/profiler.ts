@@ -9,7 +9,14 @@ class Profiler {
   continues: boolean;
   usesFunctions: boolean;
   recursive: boolean;
-
+  functions: {
+    [key: string]: {
+      parameters: {
+        name: string;
+        type: string;
+      }[];
+    };
+  }
   constructor() {
     this.libraries = [];
     this.unUsedVariables = [];
@@ -19,6 +26,7 @@ class Profiler {
     this.continues = false;
     this.usesFunctions = false;
     this.recursive = false;
+    this.functions = {};
   }
 
   addInclude(name: string) {
@@ -53,6 +61,10 @@ class Profiler {
     this.recursive = true;
   }
 
+  addFunction(name: string, parameters: { name: string; type: string }[]) {
+    this.functions[name] = { parameters };
+  }
+
   result() {
     return {
       usedLibraries: this.libraries,
@@ -63,6 +75,7 @@ class Profiler {
       usesBreaks: this.breaks,
       usesContinues: this.continues,
       isRecursive: this.recursive,
+      functions: this.functions,
     };
   }
 }

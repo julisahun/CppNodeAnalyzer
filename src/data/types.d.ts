@@ -8,6 +8,9 @@ export type analyzerResult = {
     usesBreaks: boolean;
     usesContinues: boolean;
     isRecursive: boolean;
+    functions: {
+      [key: string]: { parameters: { name: string; type: string }[] };
+    };
   };
   formattedCode: string;
 };
