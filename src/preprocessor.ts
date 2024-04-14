@@ -12,7 +12,6 @@ export function preprocess(code: string) {
   const id = uuid();
   const path = `${id}/code.cpp`;
   let { includes, code: newCode } = getIncludes(code);
-  console.log(includes, newCode)
   execSync(`mkdir ${id}`);
   fs.writeFileSync(path, newCode);
   execSync(`g++ -E ${path} -o ${id}/preprocessed.cpp`)
