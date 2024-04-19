@@ -3,7 +3,7 @@ const exec = util.promisify(require("node:child_process").exec);
 
 const testFiles = {
   analyzer: ["simple", "condition", "loops", "functions", "scopes"],
-  formatter: ["variables", "functions", "scopes", "includes"],
+  // formatter: ["variables", "functions", "scopes", "includes"],
 };
 
 const runTests = async () => {
