@@ -25,6 +25,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
+          cache-dependency-path: ./analyzer/package-lock.json
       - run: cd analyzer
       - run: npm i
       - run: npm run test-all
