@@ -1,5 +1,3 @@
-import { analyzerResult } from "./types";
-
 class Profiler {
   libraries: string[];
   unUsedVariables: string[];
@@ -10,12 +8,7 @@ class Profiler {
   usesFunctions: boolean;
   recursive: boolean;
   functions: {
-    [key: string]: {
-      parameters: {
-        name: string;
-        type: string;
-      }[];
-    };
+    [key: string]: { name: string; type: string }[]
   }
   constructor() {
     this.libraries = [];
@@ -62,7 +55,7 @@ class Profiler {
   }
 
   addFunction(name: string, parameters: { name: string; type: string }[]) {
-    this.functions[name] = { parameters };
+    this.functions[name] = parameters;
   }
 
   result() {

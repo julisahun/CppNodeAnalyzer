@@ -9,7 +9,7 @@ export type analyzerResult = {
     usesContinues: boolean;
     isRecursive: boolean;
     functions: {
-      [key: string]: { parameters: { name: string; type: string }[] };
+      [key: string]: { name: string; type: string }[];
     };
   };
   formattedCode: string;

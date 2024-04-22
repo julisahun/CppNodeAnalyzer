@@ -1,4 +1,11 @@
-import analyzer from 'cpp-node-analyzer'
+import Validator from './src/validator'
 
-let codeAnalyzer = new analyzer()
-console.log(codeAnalyzer.analyze(`#include <iostream>`))
+let validator = new Validator()
+
+export function setOptions(options) {
+  validator.setOptions(options)
+}
+
+export function validate(code) {
+  return validator.validate(code)
+}
