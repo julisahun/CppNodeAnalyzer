@@ -31,7 +31,7 @@ describe("functions", () => {
     const result = analyze(`${path}/signature.cpp`)
     const functions = result.analysis.functions;
     expect(Object.keys(functions)).toEqual(["functionName"])
-    expect(functions.functionName.parameters).toEqual([
+    expect(functions.functionName).toEqual([
       { name: 'a', type: 'int' },
       { name: 'b', type: 'bool' },
       { name: 'c', type: 'char' },
