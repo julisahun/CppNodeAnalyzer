@@ -119,9 +119,9 @@ class Data {
   }
 
   registerCall(name: string) {
-    if (this.currentScope instanceof FunctionScope) {
-      this.functions[this.currentScope.name].dependencies.push(name);
-    }
+    const { name: currentScopeName } = this.scopes.find(scope => scope instanceof FunctionScope) as FunctionScope;
+    this.functions[currentScopeName].dependencies.push(name);
+
   }
 
   diagnose() {

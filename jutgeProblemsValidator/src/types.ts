@@ -1,12 +1,12 @@
 export interface ValidatorOptions {
-  libraries: {
+  libraries?: {
     forced: string[];
     prohibited: string[];
   }
-  mustUseFunctions: {
+  mustUseFunctions?: {
     [key: string]: { name: string; type: string }[]
   };
-  programType: ProgramType;
+  programType?: ProgramType;
 }
 
 export interface Verdict {
