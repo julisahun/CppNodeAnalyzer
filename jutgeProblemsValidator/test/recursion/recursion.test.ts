@@ -7,7 +7,7 @@ let validator = new Validator()
 function validateProgram(programId: string) {
   let sources = readSources(__dirname + '/sources/' + programId)
   for (let { source, name } of sources) {
-    it(`program ${name}`, () => {
+    it(`program ${programId} - ${name}`, () => {
       let result = evaluate(source, validator)
       expect(result).toEqual(verdicts[programId][name])
     })
