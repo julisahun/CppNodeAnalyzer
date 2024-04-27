@@ -18,9 +18,12 @@ class Validator {
   }
 
   validate(code: string) {
+    this.verdict = {
+      valid: true,
+      errors: []
+    };
     const cppNodeAnalyzer = new Analyzer();
     const result = cppNodeAnalyzer.analyze(code);
-    console.log(result)
     this.validateLibraries(result);
     this.validateProgramType(result);
     this.validateFunctions(result);
@@ -72,7 +75,7 @@ class Validator {
     })
     if (missingFunctions.length) {
       this.verdict.valid = false;
-      this.verdict.errors.push('The program does not use all the required functions:', missingFunctions.map(([name]) => name).join(', '));
+      this.verdict.errors.push('The program does not use all the required functions: ' + missingFunctions.map(([name]) => name).join(', '));
     }
   }
 

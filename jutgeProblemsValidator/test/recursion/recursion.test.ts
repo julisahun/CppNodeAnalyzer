@@ -9,14 +9,13 @@ function validateProgram(programId: string) {
   for (let { source, name } of sources) {
     it(`program ${name}`, () => {
       let result = evaluate(source, validator)
-      console.log(verdicts[programId])
       expect(result).toEqual(verdicts[programId][name])
     })
   }
 }
 
 describe('should validate recursive programs', () => {
-  validator.setOptions({ programType: 'recursive' })
+  validator.setOptions({ programType: 'recursive', mustUseFunctions: { factorial: [{ type: 'int', name: 'n' }] } })
   const programs = ['P12509']
   programs.forEach(validateProgram)
 })

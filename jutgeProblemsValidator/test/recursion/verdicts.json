@@ -4,9 +4,13 @@
       "valid": true,
       "errors": []
     },
-    "juli_sahun_invalid": {
+    "juli_sahun_interative": {
       "valid": false,
-      "errors": []
+      "errors": ["The program is iterative"]
+    },
+    "juli_sahun_wrong_function": {
+      "valid": false,
+      "errors": ["The program does not use all the required functions: factorial"]
     }
   }
 
