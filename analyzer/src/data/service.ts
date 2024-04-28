@@ -6,6 +6,7 @@ import FunctionScope from "./objects/functionScope";
 import * as algorithms from "../algorithms";
 import { SyntaxNode as Node } from "tree-sitter";
 import Variable from "./objects/variable";
+import { FunctionObject } from "../types";
 
 const conditionalScopes = ["if", "else if", "while", "for"];
 
@@ -13,17 +14,12 @@ class Data {
   currentScope: Scope;
   scopes: Scope[];
   profiler: Profiler;
-  functions: {
-    [key: string]: {
-      dependencies: string[];
-      parameters: Variable[];
-    }
-  }
+  functions: FunctionObject[];
   constructor() {
     this.currentScope = null;
     this.scopes = [];
     this.profiler = new Profiler();
-    this.functions = {};
+    this.functions = [];
   }
 
   declareVariable(name: string, type: string) {
@@ -75,8 +71,9 @@ class Data {
     )
       this.profiler.registerConstantCondition();
     if (leavingScope instanceof FunctionScope) {
-      const functionName = leavingScope.name;
-      this.profiler.addFunction(functionName, leavingScope.getParameters());
+      const f = leavingScope.getFunction();
+      this.functions.push(f);
+      this.profiler.addFunction(f);
     }
   }
 
@@ -102,7 +99,6 @@ class Data {
   setFunctionName(name: string) {
     if (this.currentScope instanceof FunctionScope) {
       this.currentScope.name = name;
-      this.functions[name] = { dependencies: [], parameters: [] };
       if (name !== "main") this.profiler.registerFunction();
     }
   }
@@ -110,25 +106,20 @@ class Data {
   storeParameter(name: string, type: string) {
     if (this.currentScope instanceof FunctionScope) {
       this.currentScope.addParameter(name, type);
-      const functionName = this.currentScope.name;
-      let parameter = new Variable(name, type);
-      this.functions[functionName].parameters.push(parameter);
     }
-
     this.declareVariable(name, type);
   }
 
   registerCall(name: string) {
-    const { name: currentScopeName } = this.scopes.find(scope => scope instanceof FunctionScope) as FunctionScope;
-    this.functions[currentScopeName].dependencies.push(name);
-
+    const functionScope = this.scopes.find(scope => scope instanceof FunctionScope) as FunctionScope;
+    functionScope.registerCall(name);
   }
 
   diagnose() {
-    const dependencies = Object.entries(this.functions).reduce((acc, [name, value]) => {
-      acc[name] = value.dependencies;
+    const dependencies = this.functions.reduce((acc, f) => {
+      acc[f.name] = f.dependencies;
       return acc;
-    }, {})
+    }, {});
     const isRecursive = algorithms.isRecursive(dependencies);
     if (isRecursive) this.profiler.registerRecursion();
     return this.profiler.result();

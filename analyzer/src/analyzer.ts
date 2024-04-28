@@ -4,7 +4,7 @@ import parser from "./parser";
 import * as utils from "./utils";
 import * as traversers from "./traversers";
 import { SyntaxNode as Node } from "tree-sitter";
-import { analyzerResult } from "./data/types";
+import { analyzerResult } from "./types";
 import { preprocess } from "./preprocessor";
 
 export default class Analyzer {

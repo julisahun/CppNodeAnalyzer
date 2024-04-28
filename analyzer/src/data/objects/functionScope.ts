@@ -1,5 +1,6 @@
 import Scope from "./scope";
 import Variable from "./variable";
+import { FunctionObject } from "../../types";
 
 export default class functionScope extends Scope {
   parameters: Variable[];
@@ -23,5 +24,14 @@ export default class functionScope extends Scope {
 
   getParameters() {
     return this.parameters.map(({name, type}) => ({name, type}))
+  }
+
+  getFunction(): FunctionObject {
+    return {
+      name: this.name,
+      parameters: this.parameters,
+      type: this.returnType,
+      dependencies: this.calls,
+    }
   }
 }

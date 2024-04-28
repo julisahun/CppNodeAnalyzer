@@ -30,12 +30,13 @@ describe("functions", () => {
   it("should detect function signature", () => {
     const result = analyze(`${path}/signature.cpp`)
     const functions = result.analysis.functions;
-    expect(Object.keys(functions)).toEqual(["functionName"])
-    expect(functions.functionName).toEqual([
-      { name: 'a', type: 'int' },
-      { name: 'b', type: 'bool' },
-      { name: 'c', type: 'char' },
-      { name: 'd', type: 'long' }
+    expect(functions.length).toEqual(1)
+    expect(functions[0].name).toEqual("functionName")
+    expect(functions[0].parameters).toEqual([
+      { name: 'a', type: 'int', used: false },
+      { name: 'b', type: 'bool', used: false },
+      { name: 'c', type: 'char' , used: false },
+      { name: 'd', type: 'long', used: false }
     ])
   })
 });

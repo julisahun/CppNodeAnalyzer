@@ -8,9 +8,14 @@ export type analyzerResult = {
     usesBreaks: boolean;
     usesContinues: boolean;
     isRecursive: boolean;
-    functions: {
-      [key: string]: { name: string; type: string }[];
-    };
+    functions: FunctionObject[];
   };
   formattedCode: string;
 };
+
+export type FunctionObject = {
+  name: string;
+  parameters: Variable[];
+  type: string;
+  dependencies: string[];
+}

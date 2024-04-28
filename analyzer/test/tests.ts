@@ -1,6 +1,6 @@
 import fs from "fs";
 import Analyzer from "../src/analyzer";
-import { analyzerResult } from "../src/data/types";
+import { analyzerResult } from "../src/types";
 
 export const analyze = (filename: string): analyzerResult => {
   const code = fs.readFileSync(`test/sources/${filename}`).toString();
