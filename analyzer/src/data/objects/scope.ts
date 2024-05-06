@@ -26,4 +26,8 @@ export default class Scope {
   containsVariable(name: string) {
     return name in this.variables;
   }
+
+  getVariable(name: string) {
+    return this.variables[name];
+  }
 }

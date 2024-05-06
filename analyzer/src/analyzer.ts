@@ -1,4 +1,4 @@
-import Data from "./data/service";
+import Data from "./data/store";
 import { Formatter } from "./formatter";
 import parser from "./parser";
 import * as utils from "./utils";
@@ -67,5 +67,6 @@ export default class Analyzer {
     else_clause: traversers.else_clauseTraverser.bind(this),
     return_statement: traversers.return_statementTraverser.bind(this),
     translation_unit: traversers.translation_unitTraverser.bind(this),
+    field_expression: traversers.field_expressionTraverser.bind(this),
   };
 }

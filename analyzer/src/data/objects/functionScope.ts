@@ -7,11 +7,12 @@ export default class functionScope extends Scope {
   returnType: string;
   name: string;
   calls: string[];
-  constructor({ returnType }) {
+  constructor() {
     super();
     this.parameters = [];
-    this.returnType = returnType;
-    (this.name = null), (this.calls = []);
+    this.returnType = null;
+    this.name = null;
+    this.calls = [];
   }
 
   addParameter(name: string, type: string) {

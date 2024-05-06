@@ -1,4 +1,4 @@
-import { FunctionObject } from '../types';
+import { FunctionObject, MethodObject } from '../types';
 
 class Profiler {
   libraries: string[];
@@ -10,6 +10,7 @@ class Profiler {
   usesFunctions: boolean;
   recursive: boolean;
   functions: FunctionObject[];
+  methods: MethodObject[];
   constructor() {
     this.libraries = [];
     this.unUsedVariables = [];
@@ -20,6 +21,7 @@ class Profiler {
     this.usesFunctions = false;
     this.recursive = false;
     this.functions = [];
+    this.methods = [];
   }
 
   addInclude(name: string) {
@@ -58,6 +60,10 @@ class Profiler {
     this.functions.push(func);
   }
 
+  addMethod(method: MethodObject) {
+    this.methods.push(method);
+  }
+
   result() {
     return {
       usedLibraries: this.libraries,
@@ -69,6 +75,7 @@ class Profiler {
       usesContinues: this.continues,
       isRecursive: this.recursive,
       functions: this.functions,
+      methods: this.methods
     };
   }
 }

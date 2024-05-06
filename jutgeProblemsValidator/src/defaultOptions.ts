@@ -4,7 +4,7 @@ const defaultOptions: ValidatorOptions = {
     forced: [],
     prohibited: []
   },
-  mustUseFunctions: {},
+  mustUseFunctions: [],
   programType: "n/a"
 }
 

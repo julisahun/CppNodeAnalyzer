@@ -118,6 +118,7 @@ export function function_definitionTraverser(node: Node, depth: number) {
   this.store.createScope({ type: "function" });
   let children = node.children.map((c) => this.traverse(c, depth + 1));
   const type = children.shift();
+  this.store.setFunctionType(type);
   this.store.leaveScope();
   return `${type} ${children.join("").replace(name, mappedName)}`;
 }
@@ -138,8 +139,8 @@ export function parameter_declarationTraverser(node: Node, depth: number) {
 }
 
 export function call_expressionTraverser(node: Node, depth: number) {
+  const { name } = this.formatter.tokenizeIdentifier(node);
   let children = node.children.map((c) => this.traverse(c, depth + 1));
-  const name = this.formatter.unMapToken(children[0]);
   this.store.registerCall(name);
   return children.join("");
 }
@@ -194,4 +195,10 @@ export function translation_unitTraverser(node: Node, depth: number) {
     this.traverse(c, depth + 1),
   );
   return children.join("");
+}
+
+export function field_expressionTraverser(node: Node, depth: number) {
+  let identifier = utils.findChild({ node, type: "identifier" });
+  let methodName = utils.findChild({ node, type: "field_identifier" });
+  this.store.registerMethod(identifier.text, methodName.text);
 }

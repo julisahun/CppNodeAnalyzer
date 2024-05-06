@@ -20,9 +20,10 @@ export class Formatter {
       node.type === "function_declarator" ||
       node.children.some((c) => c.type === "function_declarator");
     const name = utils.findChild({
-      node: node.child(1),
+      node,
       type: "identifier",
     }).text;
+    if (this.isAlreadyMapped(name)) return { name, mappedName: this.mapToken(name) };
     return {
       name,
       mappedName: this.registerToken(

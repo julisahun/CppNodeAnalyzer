@@ -5,8 +5,7 @@ import Condition from "./objects/condition";
 import FunctionScope from "./objects/functionScope";
 import * as algorithms from "../algorithms";
 import { SyntaxNode as Node } from "tree-sitter";
-import Variable from "./objects/variable";
-import { FunctionObject } from "../types";
+import { FunctionObject, MethodObject } from "../types";
 
 const conditionalScopes = ["if", "else if", "while", "for"];
 
@@ -44,15 +43,14 @@ class Data {
 
   createScope({
     type,
-    returnType,
-  }: { type?: string; returnType?: string } = {}) {
+  }: { type?: string } = {}) {
     let newScope: Scope;
     if (conditionalScopes.includes(type)) {
       newScope = new ConditionalScope({
         loops: type === "while" || type === "for",
       });
     } else if (type === "function") {
-      newScope = new FunctionScope({ returnType });
+      newScope = new FunctionScope();
     } else {
       newScope = new Scope();
     }
@@ -103,6 +101,12 @@ class Data {
     }
   }
 
+  setFunctionType(type: string) {
+    if (this.currentScope instanceof FunctionScope) {
+      this.currentScope.returnType = type;
+    }
+  }
+
   storeParameter(name: string, type: string) {
     if (this.currentScope instanceof FunctionScope) {
       this.currentScope.addParameter(name, type);
@@ -113,6 +117,12 @@ class Data {
   registerCall(name: string) {
     const functionScope = this.scopes.find(scope => scope instanceof FunctionScope) as FunctionScope;
     functionScope.registerCall(name);
+  }
+
+  registerMethod(identifier: string, name: string) {
+    let variable = this.currentScope.getVariable(identifier)
+    let method: MethodObject = { type: variable.type, name };
+    this.profiler.addMethod(method);
   }
 
   diagnose() {
