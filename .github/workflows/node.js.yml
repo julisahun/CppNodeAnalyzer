@@ -28,14 +28,12 @@ jobs:
           cache-dependency-path: ./analyzer/package-lock.json
       - run: npm i
       - run: npm run test-all
+
   run-jutge-validator-tests:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [18.x]
-    defaults:
-      run:
-        working-directory: ./jutgeProblemsValidator
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
@@ -44,8 +42,15 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
           cache-dependency-path: ./jutgeProblemsValidator/package-lock.json
-      - run: cd ../analyzer && npm run build && npm link
-      - run: cd ../jutgeProblemsValidator
-      - run: npm i
-      - run: npm run test
+      - name: Install dependencies
+        run: |
+            cd analyzer
+            npm install
+            cd ../jutgeProblemsValidator
+            npm install
+          
+      - name: Run tests
+        run: |
+            cd jutgeProblemsValidator
+            npm test
 
