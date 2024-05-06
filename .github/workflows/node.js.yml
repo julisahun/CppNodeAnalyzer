@@ -44,6 +44,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
           cache-dependency-path: ./jutgeProblemsValidator/package-lock.json
+      - run: cd ../analyzer && npm build && npm link
+      - run: cd ../jutgeProblemsValidator
       - run: npm i
       - run: npm run test
 
