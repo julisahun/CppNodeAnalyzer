@@ -5,6 +5,10 @@ const defaultOptions: ValidatorOptions = {
     prohibited: []
   },
   mustUseFunctions: [],
+  methods: {
+    forced: [],
+    prohibited: []
+  },
   programType: "n/a"
 }
 

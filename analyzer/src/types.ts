@@ -1,4 +1,7 @@
-import Variable from "./data/objects/variable";
+type Variable = {
+  name: string;
+  type: string;
+}
 
 export type analyzerResult = {
   analysis: {
@@ -20,7 +23,7 @@ export type FunctionObject = {
   name: string;
   parameters: Variable[];
   type: string;
-  dependencies: string[];
+  dependencies?: string[];
 }
 
 export type MethodObject = {

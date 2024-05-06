@@ -1,4 +1,4 @@
-import { FunctionObject } from 'cpp-node-analyzer';
+import { FunctionObject, MethodObject } from 'cpp-node-analyzer';
 
 export interface ValidatorOptions {
   libraries?: {
@@ -6,6 +6,10 @@ export interface ValidatorOptions {
     prohibited: string[];
   }
   mustUseFunctions?: FunctionObject[];
+  methods?: {
+    forced: MethodObject[];
+    prohibited: MethodObject[];
+  }
   programType?: ProgramType;
 }
 
