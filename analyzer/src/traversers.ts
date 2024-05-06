@@ -141,7 +141,8 @@ export function parameter_declarationTraverser(node: Node, depth: number) {
 export function call_expressionTraverser(node: Node, depth: number) {
   const { name } = this.formatter.tokenizeIdentifier(node);
   let children = node.children.map((c) => this.traverse(c, depth + 1));
-  this.store.registerCall(name);
+  const isFunction = !utils.findChild({ node, type: "field_identifier" });
+  if (isFunction) this.store.registerCall(name);
   return children.join("");
 }
 
@@ -201,4 +202,5 @@ export function field_expressionTraverser(node: Node, depth: number) {
   let identifier = utils.findChild({ node, type: "identifier" });
   let methodName = utils.findChild({ node, type: "field_identifier" });
   this.store.registerMethod(identifier.text, methodName.text);
+  return `${this.formatter.mapToken(identifier.text)}.${methodName.text}`;
 }
