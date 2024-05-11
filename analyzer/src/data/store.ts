@@ -14,17 +14,17 @@ class Data {
   scopes: Scope[];
   profiler: Profiler;
   functions: FunctionObject[];
+  methods: MethodObject[];
   constructor() {
     this.currentScope = null;
     this.scopes = [];
     this.profiler = new Profiler();
     this.functions = [];
+    this.methods = [];
   }
 
   declareVariable(name: string, type: string) {
-    const alreadyDeclared = this.scopes.some((scope) =>
-      scope.containsVariable(name),
-    );
+    const alreadyDeclared = this.scopes.some((scope) => scope.containsVariable(name));
     if (alreadyDeclared) this.profiler.registerRedeclaration();
     this.currentScope.declareVariable(name, type);
   }
@@ -41,9 +41,7 @@ class Data {
     this.profiler.addInclude(libraryName);
   }
 
-  createScope({
-    type,
-  }: { type?: string } = {}) {
+  createScope({ type }: { type?: string } = {}) {
     let newScope: Scope;
     if (conditionalScopes.includes(type)) {
       newScope = new ConditionalScope({
@@ -63,10 +61,7 @@ class Data {
     this.currentScope = this.scopes[0];
     let unUsedVariables = leavingScope.getUnUsedVariables();
     unUsedVariables.forEach((v) => this.profiler.addUnUsedVariable(v.name));
-    if (
-      leavingScope instanceof ConditionalScope &&
-      !leavingScope.conditionUpdated()
-    )
+    if (leavingScope instanceof ConditionalScope && !leavingScope.conditionUpdated())
       this.profiler.registerConstantCondition();
     if (leavingScope instanceof FunctionScope) {
       const f = leavingScope.getFunction();
@@ -115,13 +110,20 @@ class Data {
   }
 
   registerCall(name: string) {
-    const functionScope = this.scopes.find(scope => scope instanceof FunctionScope) as FunctionScope;
+    const functionScope = this.scopes.find(
+      (scope) => scope instanceof FunctionScope
+    ) as FunctionScope;
     functionScope.registerCall(name);
   }
 
   registerMethod(identifier: string, name: string) {
-    let variable = this.currentScope.getVariable(identifier)
+    let variable = this.scopes
+      .find((s) => s.containsVariable(identifier))
+      .getVariable(identifier);
+    const type = variable.type;
     let method: MethodObject = { type: variable.type, name };
+    if (this.methods.some(m => m.name === name && m.type === type)) return;
+    this.methods.push(method);
     this.profiler.addMethod(method);
   }
 

@@ -26,9 +26,7 @@ export function while_statementTraverser(node: Node, depth: number) {
   this.store.createScope({ type: "while" });
   const conditionNodes = utils.flatten(node.child(1));
   this.store.storeCondition(conditionNodes);
-  let postScopeChildren = node.children
-    .slice(2)
-    .map((n) => this.traverse(n, depth + 1));
+  let postScopeChildren = node.children.slice(2).map((n) => this.traverse(n, depth + 1));
   this.store.leaveScope();
   return `${[...preScopeChildren, ...postScopeChildren].join("")}`;
 }
@@ -41,9 +39,7 @@ export function for_statementTraverser(node: Node, depth: number) {
   this.store.createScope({ type: "for" });
   const conditionNodes = utils.flatten(node.child(3));
   this.store.storeCondition(conditionNodes);
-  let postScopeChildren = node.children
-    .slice(4)
-    .map((n) => this.traverse(n, depth + 1));
+  let postScopeChildren = node.children.slice(4).map((n) => this.traverse(n, depth + 1));
   this.store.leaveScope();
   this.store.leaveScope();
   return `${[...preScopeChildren, ...postScopeChildren].join("")}`;
@@ -64,9 +60,7 @@ export function if_statementTraverser(node: Node, depth: number) {
 }
 
 export function preproc_includeTraverser(node: Node, depth: number) {
-  let [include, library] = node.children.map((c) =>
-    this.traverse(c, depth + 1),
-  );
+  let [include, library] = node.children.map((c) => this.traverse(c, depth + 1));
   this.store.registerInclude(library);
   return `${include} ${library}\n`;
 }
@@ -84,7 +78,7 @@ export function compound_statementTraverser(node: Node, depth: number) {
     if (nodeA.type !== "declaration" && nodeB.type === "declaration") return 1;
     if (nodeA.type === "declaration" && nodeB.type === "declaration") {
       const [nameA, nameB] = [nodeA, nodeB].map(
-        (n) => utils.findChild({ node: n, type: "identifier" }).text,
+        (n) => utils.findChild({ node: n, type: "identifier" }).text
       );
       return identifiers.indexOf(nameA) - identifiers.indexOf(nameB);
     }
@@ -127,13 +121,16 @@ export function function_declaratorTraverser(node: Node, depth: number) {
   const name = this.formatter.unMapToken(this.traverse(node.child(0)));
   this.store.setFunctionName(name);
   let remainingChildren = node.children.slice(1).map((c) => this.traverse(c, depth + 1));
-  return `${name}${remainingChildren.join(',')}`;
+  return `${name}${remainingChildren.join(",")}`;
 }
 
 export function parameter_declarationTraverser(node: Node, depth: number) {
   const { mappedName, name } = this.formatter.tokenizeIdentifier(node);
   let children = node.children.map((c) => this.traverse(c, depth + 1));
-  const type = children.shift();
+  let type =
+    utils.findChild({ node, type: "template_type" })?.text ||
+    utils.findChild({ node, type: "type_identifier" })?.text ||
+    utils.findChild({ node, type: "primitive_type" })?.text;
   this.store.storeParameter(name, type);
   return `${type} ${children.join("").replace(name, mappedName)}`;
 }
@@ -180,7 +177,7 @@ export function translation_unitTraverser(node: Node, depth: number) {
       }
       return acc;
     },
-    { includeChildren: [], nonIncludeChildren: [] },
+    { includeChildren: [], nonIncludeChildren: [] }
   );
 
   let sortedIncludes = includeChildren.sort((nodeA, nodeB) => {
@@ -193,7 +190,7 @@ export function translation_unitTraverser(node: Node, depth: number) {
     );
   });
   let children = [...nonDuplicateIncludes, ...nonIncludeChildren].map((c) =>
-    this.traverse(c, depth + 1),
+    this.traverse(c, depth + 1)
   );
   return children.join("");
 }

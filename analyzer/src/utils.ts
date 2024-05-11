@@ -14,7 +14,7 @@ export function flatten(node: Node, notFrom?: string): Node[] {
   if (node.children.length === 0) {
     return [node];
   }
-  return node.children.flatMap((n) => flatten(n, notFrom));
+  return node.children.flatMap((n) => [node, ...flatten(n, notFrom)]);
 }
 
 export function findChildren({
