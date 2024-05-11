@@ -129,6 +129,7 @@ export function parameter_declarationTraverser(node: Node, depth: number) {
   let children = node.children.map((c) => this.traverse(c, depth + 1));
   let type =
     utils.findChild({ node, type: "template_type" })?.text ||
+    utils.findChild({ node, type: "sized_type_specifier" })?.text ||
     utils.findChild({ node, type: "type_identifier" })?.text ||
     utils.findChild({ node, type: "primitive_type" })?.text;
   this.store.storeParameter(name, type);
