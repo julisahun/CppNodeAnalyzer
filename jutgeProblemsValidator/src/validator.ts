@@ -28,7 +28,7 @@ class Validator {
     this.validateLibraries(result);
     this.validateProgramType(result);
     this.validateFunctions(result);
-    this.validateMethods(result);
+    this.validateProperties(result);
     return this.verdict;
   }
 
@@ -81,18 +81,18 @@ class Validator {
     }
   }
 
-  validateMethods(result: analyzerResult) { 
-    const { forced, prohibited } = this.options.methods;
-    const methods = result.analysis.methods;
-    const missingMethods = forced.filter(forcedMethod => !methods.some(method => method.name === forcedMethod.name && method.type === forcedMethod.type));
-    const prohibitedMethods = prohibited.filter(prohibitedMethod => methods.some(method => method.name === prohibitedMethod.name && method.type === prohibitedMethod.type));
-    if (missingMethods.length) {
+  validateProperties(result: analyzerResult) { 
+    const { forced, prohibited } = this.options.properties;
+    const properties = result.analysis.properties;
+    const missingproperties = forced.filter(forcedProperty => !properties.some(property => property.name === forcedProperty.name && property.type === forcedProperty.type));
+    const prohibitedproperties = prohibited.filter(prohibitedProperty => properties.some(property => property.name === prohibitedProperty.name && property.type === prohibitedProperty.type));
+    if (missingproperties.length) {
       this.verdict.valid = false;
-      this.verdict.errors.push('The program does not use all the required methods: ' + missingMethods.map(({ name }) => name).join(', '));
+      this.verdict.errors.push('The program does not use all the required properties: ' + missingproperties.map(({ name }) => name).join(', '));
     }
-    if (prohibitedMethods.length) {
+    if (prohibitedproperties.length) {
       this.verdict.valid = false;
-      this.verdict.errors.push('The program uses a prohibited method: ' + prohibitedMethods.map(({ name }) => name).join(', '));
+      this.verdict.errors.push('The program uses a prohibited property: ' + prohibitedproperties.map(({ name }) => name).join(', '));
     }
   }
 }

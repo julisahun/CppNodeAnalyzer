@@ -1,5 +1,5 @@
 import Analyzer from "./src/analyzer";
-import { FunctionObject, MethodObject } from "./src/types";
+import { FunctionObject, PropertyObject } from "./src/types";
 import * as dotenv from "dotenv";
 dotenv.config();
 
@@ -10,5 +10,5 @@ dotenv.config();
 
 export default Analyzer;
 
-export type { FunctionObject, MethodObject };
+export type { FunctionObject, PropertyObject };
 
