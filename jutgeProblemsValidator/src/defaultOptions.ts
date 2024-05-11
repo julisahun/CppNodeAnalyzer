@@ -5,7 +5,7 @@ const defaultOptions: ValidatorOptions = {
     prohibited: []
   },
   mustUseFunctions: [],
-  methods: {
+  properties: {
     forced: [],
     prohibited: []
   },
