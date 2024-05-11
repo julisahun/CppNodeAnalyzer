@@ -7,14 +7,14 @@ export type analyzerResult = {
   analysis: {
     usedLibraries: string[];
     unUsedVariables: string[];
-    containsRedeclarations: boolean;
+    shadows: boolean;
     containsConstantConditions: boolean;
     usesFunctions: boolean;
     usesBreaks: boolean;
     usesContinues: boolean;
     isRecursive: boolean;
     functions: FunctionObject[];
-    methods: MethodObject[];
+    properties: PropertyObject[];
   };
   formattedCode: string;
 };
@@ -26,7 +26,7 @@ export type FunctionObject = {
   dependencies?: string[];
 }
 
-export type MethodObject = {
+export type PropertyObject = {
   type: string;
   name: string;
 }

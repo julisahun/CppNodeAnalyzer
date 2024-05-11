@@ -5,7 +5,7 @@ import Condition from "./objects/condition";
 import FunctionScope from "./objects/functionScope";
 import * as algorithms from "../algorithms";
 import { SyntaxNode as Node } from "tree-sitter";
-import { FunctionObject, MethodObject } from "../types";
+import { FunctionObject, PropertyObject } from "../types";
 
 const conditionalScopes = ["if", "else if", "while", "for"];
 
@@ -14,18 +14,18 @@ class Data {
   scopes: Scope[];
   profiler: Profiler;
   functions: FunctionObject[];
-  methods: MethodObject[];
+  properties: PropertyObject[];
   constructor() {
     this.currentScope = null;
     this.scopes = [];
     this.profiler = new Profiler();
     this.functions = [];
-    this.methods = [];
+    this.properties = [];
   }
 
   declareVariable(name: string, type: string) {
     const alreadyDeclared = this.scopes.some((scope) => scope.containsVariable(name));
-    if (alreadyDeclared) this.profiler.registerRedeclaration();
+    if (alreadyDeclared) this.profiler.registerShadowing();
     this.currentScope.declareVariable(name, type);
   }
 
@@ -116,15 +116,15 @@ class Data {
     functionScope.registerCall(name);
   }
 
-  registerMethod(identifier: string, name: string) {
+  registerProperty(identifier: string, name: string) {
     let variable = this.scopes
       .find((s) => s.containsVariable(identifier))
       .getVariable(identifier);
     const type = variable.type;
-    let method: MethodObject = { type: variable.type, name };
-    if (this.methods.some(m => m.name === name && m.type === type)) return;
-    this.methods.push(method);
-    this.profiler.addMethod(method);
+    let property: PropertyObject = { type: variable.type, name };
+    if (this.properties.some(m => m.name === name && m.type === type)) return;
+    this.properties.push(property);
+    this.profiler.addProperty(property);
   }
 
   diagnose() {

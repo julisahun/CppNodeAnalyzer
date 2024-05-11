@@ -10,6 +10,6 @@ describe("scopes", () => {
 
   it("should detect redeclarations across scopes", () => {
     const result = analyze(`${path}/redeclaration.cpp`);
-    expect(result.analysis.containsRedeclarations).toEqual(true);
+    expect(result.analysis.shadows).toEqual(true);
   });
 });

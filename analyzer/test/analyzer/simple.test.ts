@@ -18,7 +18,7 @@ describe("simple", () => {
 
   it("should detect redeclaration", () => {
     const result = analyze(`${path}/redeclaration.cpp`);
-    expect(result.analysis.containsRedeclarations).toBe(true);
+    expect(result.analysis.shadows).toBe(true);
   });
 
   it("should not detect used variable", () => {

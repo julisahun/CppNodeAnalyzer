@@ -1,27 +1,27 @@
-import { FunctionObject, MethodObject } from '../types';
+import { FunctionObject, PropertyObject } from '../types';
 
 class Profiler {
   libraries: string[];
   unUsedVariables: string[];
-  redeclaration: boolean;
+  shadows: boolean;
   constantConditions: boolean;
   breaks: boolean;
   continues: boolean;
   usesFunctions: boolean;
   recursive: boolean;
   functions: FunctionObject[];
-  methods: MethodObject[];
+  properties: PropertyObject[];
   constructor() {
     this.libraries = [];
     this.unUsedVariables = [];
-    this.redeclaration = false;
+    this.shadows = false;
     this.constantConditions = false;
     this.breaks = false;
     this.continues = false;
     this.usesFunctions = false;
     this.recursive = false;
     this.functions = [];
-    this.methods = [];
+    this.properties = [];
   }
 
   addInclude(name: string) {
@@ -32,8 +32,8 @@ class Profiler {
     this.unUsedVariables.push(name);
   }
 
-  registerRedeclaration() {
-    this.redeclaration = true;
+  registerShadowing() {
+    this.shadows = true;
   }
 
   registerConstantCondition() {
@@ -60,22 +60,22 @@ class Profiler {
     this.functions.push(func);
   }
 
-  addMethod(method: MethodObject) {
-    this.methods.push(method);
+  addProperty(property: PropertyObject) {
+    this.properties.push(property);
   }
 
   result() {
     return {
       usedLibraries: this.libraries,
       unUsedVariables: this.unUsedVariables,
-      containsRedeclarations: this.redeclaration,
+      shadows: this.shadows,
       containsConstantConditions: this.constantConditions,
       usesFunctions: this.usesFunctions,
       usesBreaks: this.breaks,
       usesContinues: this.continues,
       isRecursive: this.recursive,
       functions: this.functions,
-      methods: this.methods
+      properties: this.properties
     };
   }
 }
