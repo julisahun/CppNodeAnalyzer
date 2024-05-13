@@ -15,22 +15,21 @@ export default class Analyzer {
     this.formatter = new Formatter();
   }
   analyze(code: string): analyzerResult {
+    try {
     code = preprocess(code);
+    } catch (e) {
+      throw new Error(`Error preprocessing code: ${e.message}`);
+    }
     const tree = parser.parse(code);
     const rootNode = tree.rootNode;
     this.store.createScope({ type: "global" });
-    try {
-      let formattedCode = this.traverse(rootNode);
-      let result = {
-        analysis: this.store.diagnose(),
-        formattedCode,
-      };
-      return result;
-    } catch (e) {
-      console.error(e);
-    } finally {
-      this.store.leaveScope();
-    }
+    let formattedCode = this.traverse(rootNode);
+    let result = {
+      analysis: this.store.diagnose(),
+      formattedCode,
+    };
+    this.store.leaveScope();
+    return result;
   }
 
   traverse(node: Node, depth: number = 0) {
@@ -68,5 +67,6 @@ export default class Analyzer {
     return_statement: traversers.return_statementTraverser.bind(this),
     translation_unit: traversers.translation_unitTraverser.bind(this),
     field_expression: traversers.field_expressionTraverser.bind(this),
+    ERROR: traversers.errorTraverser.bind(this),
   };
 }

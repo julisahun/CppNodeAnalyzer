@@ -100,7 +100,7 @@ export function continue_statementTraverser(node: Node, depth: number) {
 
 export function function_definitionTraverser(node: Node, depth: number) {
   const name = utils.findChild({
-    node: node.child(1),
+    node: node,
     type: "identifier",
   }).text;
   let mappedName: string;
@@ -125,7 +125,13 @@ export function function_declaratorTraverser(node: Node, depth: number) {
 }
 
 export function parameter_declarationTraverser(node: Node, depth: number) {
-  const { mappedName, name } = this.formatter.tokenizeIdentifier(node);
+  let name = ''
+  let mappedName = ''
+  if (utils.findChild({ node, type: "identifier" })) {
+    let mappedData = this.formatter.tokenizeIdentifier(node);
+    name = mappedData.name;
+    mappedName = mappedData.mappedName;
+  }
   let children = node.children.map((c) => this.traverse(c, depth + 1));
   let type =
     utils.findChild({ node, type: "template_type" })?.text ||
@@ -201,4 +207,8 @@ export function field_expressionTraverser(node: Node, depth: number) {
   let methodName = utils.findChild({ node, type: "field_identifier" });
   this.store.registerProperty(identifier.text, methodName.text);
   return `${this.formatter.mapToken(identifier.text)}.${methodName.text}`;
+}
+
+export function errorTraverser(node: Node, depth: number) {
+  throw new Error(`This code is not analyzable: ${node.text}`);
 }

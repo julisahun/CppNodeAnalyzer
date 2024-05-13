@@ -10,13 +10,13 @@ function getIncludes(code: string) {
 
 export function preprocess(code: string) {
   const id = uuid();
-  const path = `${id}/code.cpp`;
+  const path = `${__dirname}/${id}`;
   let { includes, code: newCode } = getIncludes(code);
-  execSync(`mkdir ${id}`);
-  fs.writeFileSync(path, newCode);
-  execSync(`g++ -E ${path} -o ${id}/preprocessed.cpp`)
-  const preprocessedCode = fs.readFileSync(`${id}/preprocessed.cpp`, 'utf-8');
+  execSync(`mkdir ${path}`);
+  fs.writeFileSync(`${path}/code.cpp`, newCode);
+  execSync(`g++ -E ${path} -o ${path}/preprocessed.cpp`)
+  const preprocessedCode = fs.readFileSync(`${path}/preprocessed.cpp`, 'utf-8');
 
-  execSync(`rm -rf ${id}`)
+  execSync(`rm -rf ${path}`)
   return [...includes, ...preprocessedCode.split("\n")].join('\n');
 }

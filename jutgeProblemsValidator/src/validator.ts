@@ -24,11 +24,17 @@ class Validator {
       errors: []
     };
     const cppNodeAnalyzer = new Analyzer();
-    const result = cppNodeAnalyzer.analyze(code);
-    this.validateLibraries(result);
-    this.validateProgramType(result);
-    this.validateFunctions(result);
-    this.validateProperties(result);
+    let result: analyzerResult;
+      result = cppNodeAnalyzer.analyze(code);
+      this.validateLibraries(result);
+      this.validateProgramType(result);
+      this.validateFunctions(result);
+      this.validateProperties(result);
+    // } catch (e) {
+    //   console.log(e)
+    //   this.verdict.valid = false;
+    //   this.verdict.errors.push('An error occurred while analyzing the code');
+    // }
     return this.verdict;
   }
 
@@ -68,6 +74,7 @@ class Validator {
       if (!functionUsed) return true;
 
       for (let i = 0; i < mustUseFunction.parameters.length; i++) {
+        if (!functionUsed.parameters[i]) return true;
         const { name, type } = mustUseFunction.parameters[i];
         const { name: usedName, type: usedType } = functionUsed.parameters[i];
         if (name !== usedName) return true;
@@ -77,11 +84,11 @@ class Validator {
     })
     if (missingFunctions.length) {
       this.verdict.valid = false;
-      this.verdict.errors.push('The program does not use all the required functions: ' + missingFunctions.map(({name}) => name).join(', '));
+      this.verdict.errors.push('The program does not use all the required functions: ' + missingFunctions.map(({ name }) => name).join(', '));
     }
   }
 
-  validateProperties(result: analyzerResult) { 
+  validateProperties(result: analyzerResult) {
     const { forced, prohibited } = this.options.properties;
     const properties = result.analysis.properties;
     const missingproperties = forced.filter(forcedProperty => !properties.some(property => property.name === forcedProperty.name && property.type === forcedProperty.type));

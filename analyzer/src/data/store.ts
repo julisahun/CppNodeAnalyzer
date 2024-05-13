@@ -105,21 +105,24 @@ class Data {
   storeParameter(name: string, type: string) {
     if (this.currentScope instanceof FunctionScope) {
       this.currentScope.addParameter(name, type);
-    }
-    this.declareVariable(name, type);
+    } 
+    if (name)
+      this.declareVariable(name, type);
   }
 
   registerCall(name: string) {
     const functionScope = this.scopes.find(
       (scope) => scope instanceof FunctionScope
     ) as FunctionScope;
+    if (!functionScope) return;
     functionScope.registerCall(name);
   }
 
   registerProperty(identifier: string, name: string) {
     let variable = this.scopes
       .find((s) => s.containsVariable(identifier))
-      .getVariable(identifier);
+      ?.getVariable(identifier);
+    if (!variable) return;
     const type = variable.type;
     let property: PropertyObject = { type: variable.type, name };
     if (this.properties.some(m => m.name === name && m.type === type)) return;

@@ -27,6 +27,7 @@ export function findChildren({
   notFrom?: string;
 }): Node[] {
   let children = flatten(node, notFrom);
+  if (children.some(c => c.type === 'ERROR')) throw new Error(`This code is not analyzable: ${node.text}`);
   return children.filter((c: Node) => c.type === type);
 }
 

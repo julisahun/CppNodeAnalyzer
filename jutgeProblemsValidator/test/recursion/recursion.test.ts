@@ -16,7 +16,7 @@ function validateProgram(programId: string) {
 
 describe('should validate recursive programs', () => {
   validator.setOptions({ programType: 'recursive', mustUseFunctions: [{ name: 'factorial', type: 'int', parameters: [{ type: 'int', name: 'n' }] }] })
-  const programs = ['P79817']
+  const programs = ['P12509']
   programs.forEach(validateProgram)
 })
 
