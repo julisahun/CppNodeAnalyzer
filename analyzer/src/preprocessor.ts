@@ -13,7 +13,7 @@ export function preprocess(code: string) {
   const path = `${__dirname}/${id}`;
   let { includes, code: newCode } = getIncludes(code);
   execSync(`mkdir ${path}`);
-  fs.writeFileSync(`${path}/code.cpp`, newCode);
+  fs.writeFileSync(`${path}/preprocessed.cpp`, newCode);
   execSync(`g++ -E ${path} -o ${path}/preprocessed.cpp`)
   const preprocessedCode = fs.readFileSync(`${path}/preprocessed.cpp`, 'utf-8');
 
