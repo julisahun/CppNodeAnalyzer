@@ -2,7 +2,7 @@ const util = require("node:util");
 const exec = util.promisify(require("node:child_process").exec);
 
 const testFiles = {
-  analyzer: ["simple", "condition", "loops", "functions", "scopes", "properties"],
+  analyzer: ["simple", "condition", "loops", "functions", "scopes", "properties", "preprocess"],
   // formatter: ["variables", "functions", "scopes", "includes"],
 };
 

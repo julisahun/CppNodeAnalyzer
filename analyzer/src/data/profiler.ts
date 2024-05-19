@@ -9,6 +9,7 @@ class Profiler {
   continues: boolean;
   usesFunctions: boolean;
   recursive: boolean;
+  iterative: boolean;
   functions: FunctionObject[];
   properties: PropertyObject[];
   constructor() {
@@ -20,6 +21,7 @@ class Profiler {
     this.continues = false;
     this.usesFunctions = false;
     this.recursive = false;
+    this.iterative = false;
     this.functions = [];
     this.properties = [];
   }
@@ -56,6 +58,10 @@ class Profiler {
     this.recursive = true;
   }
 
+  registerLoop() {
+    this.iterative = true;
+  }
+
   addFunction(func: FunctionObject) {
     this.functions.push(func);
   }
@@ -74,6 +80,7 @@ class Profiler {
       usesBreaks: this.breaks,
       usesContinues: this.continues,
       isRecursive: this.recursive,
+      isIterative: this.iterative,
       functions: this.functions,
       properties: this.properties
     };

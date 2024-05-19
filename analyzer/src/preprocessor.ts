@@ -12,11 +12,15 @@ export function preprocess(code: string) {
   const id = uuid();
   const path = `${__dirname}/${id}`;
   let { includes, code: newCode } = getIncludes(code);
-  execSync(`mkdir ${path}`);
-  fs.writeFileSync(`${path}/preprocessed.cpp`, newCode);
-  execSync(`g++ -E ${path} -o ${path}/preprocessed.cpp`)
-  const preprocessedCode = fs.readFileSync(`${path}/preprocessed.cpp`, 'utf-8');
-
-  execSync(`rm -rf ${path}`)
-  return [...includes, ...preprocessedCode.split("\n")].join('\n');
+  try {
+    execSync(`mkdir ${path}`);
+    fs.writeFileSync(`${path}/code.cpp`, newCode);
+    execSync(`g++ -E ${path}/code.cpp -o ${path}/preprocessed.cpp`, { stdio: 'pipe' })
+    const preprocessedCode = fs.readFileSync(`${path}/preprocessed.cpp`, 'utf-8');
+    return [...includes, ...preprocessedCode.split("\n")].join('\n');
+  } catch (e) {
+    throw new Error(e.stderr);
+  } finally {
+    execSync(`rm -rf ${path}`)
+  }
 }

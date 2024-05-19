@@ -203,7 +203,8 @@ export function translation_unitTraverser(node: Node, depth: number) {
 }
 
 export function field_expressionTraverser(node: Node, depth: number) {
-  let identifier = utils.findChild({ node, type: "identifier" });
+  node.children.map(c => utils.log(c, depth + 1))
+  let identifier = utils.findChild({ node, type: "identifier" }) ?? utils.findChild({ node, type: "this" });
   let methodName = utils.findChild({ node, type: "field_identifier" });
   this.store.registerProperty(identifier.text, methodName.text);
   return `${this.formatter.mapToken(identifier.text)}.${methodName.text}`;

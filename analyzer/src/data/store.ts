@@ -47,6 +47,7 @@ class Data {
       newScope = new ConditionalScope({
         loops: type === "while" || type === "for",
       });
+      this.profiler.registerLoop();
     } else if (type === "function") {
       newScope = new FunctionScope();
     } else {

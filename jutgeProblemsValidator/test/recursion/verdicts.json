@@ -6,7 +6,7 @@
     },
     "juli_sahun_interative": {
       "valid": false,
-      "errors": ["The program is iterative"]
+      "errors": ["The program is not recursive"]
     },
     "juli_sahun_wrong_function": {
       "valid": false,

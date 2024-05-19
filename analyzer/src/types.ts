@@ -13,6 +13,7 @@ export type analyzerResult = {
     usesBreaks: boolean;
     usesContinues: boolean;
     isRecursive: boolean;
+    isIterative: boolean;
     functions: FunctionObject[];
     properties: PropertyObject[];
   };

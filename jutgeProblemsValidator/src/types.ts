@@ -10,12 +10,13 @@ export interface ValidatorOptions {
     forced: PropertyObject[];
     prohibited: PropertyObject[];
   }
-  programType?: ProgramType;
+  programType: {
+    iterative?: boolean;
+    recursive?: boolean;
+  }
 }
 
 export interface Verdict {
   valid: boolean;
   errors: string[];
 }
-
-type ProgramType = 'iterative' | 'recursive' | 'n/a'

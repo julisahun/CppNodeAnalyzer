@@ -2,6 +2,17 @@ import { analyze } from "../tests";
 
 describe("loops", () => {
   const path = "analyzer/loops";
+
+  it("should detect no loops", () => {
+    const result = analyze(`${path}/noLoop.cpp`);
+    expect(result.analysis.isIterative).toEqual(false);
+  });
+
+  it("should detect while loops", () => {
+    const result = analyze(`${path}/while.cpp`);
+    expect(result.analysis.isIterative).toEqual(true);
+  });
+
   it("should pass updating condition in while loops", () => {
     const result = analyze(`${path}/updatingConditionWhile.cpp`);
     expect(result.analysis.containsConstantConditions).toEqual(false);

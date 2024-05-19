@@ -9,7 +9,7 @@ const defaultOptions: ValidatorOptions = {
     forced: [],
     prohibited: []
   },
-  programType: "n/a"
+  programType: {}
 }
 
 export default defaultOptions;
