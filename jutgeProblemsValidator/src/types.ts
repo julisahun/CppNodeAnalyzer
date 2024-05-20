@@ -2,15 +2,15 @@ import { FunctionObject, PropertyObject } from 'cpp-node-analyzer';
 
 export interface ValidatorOptions {
   libraries?: {
-    forced: string[];
-    prohibited: string[];
+    forced?: string[];
+    prohibited?: string[];
   }
   mustUseFunctions?: FunctionObject[];
   properties?: {
-    forced: PropertyObject[];
-    prohibited: PropertyObject[];
+    forced?: PropertyObject[];
+    prohibited?: PropertyObject[];
   }
-  programType: {
+  programType?: {
     iterative?: boolean;
     recursive?: boolean;
   }

@@ -15,7 +15,16 @@ class Validator {
   }
 
   setOptions(options: ValidatorOptions) {
-    this.options = { ...defaultOptions, ...options };
+    this.options = { ...defaultOptions };
+    for(let key in options) {
+      if (Array.isArray(options[key])) {
+        this.options[key] = [...this.options[key],...options[key]];
+      } else if ('object' === typeof options[key]) {
+        this.options[key] = { ...this.options[key],...options[key] };
+      } else {
+        this.options[key] = options[key];
+      }
+    }
   }
 
   validate(code: string) {
