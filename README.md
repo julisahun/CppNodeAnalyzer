@@ -22,8 +22,8 @@ $ yarn add cpp-node-analyzer
 import Analyzer from 'cpp-node-analyzer';
 const cppNodeAnalyzer = new Analyzer();
 
-const code = YOUR_CPP_CODE_STRING
+const code = YOUR_CPP_CODE_STRING;
 
-const result = cppNodeAnalyzer.analyze(code)
+const result = cppNodeAnalyzer.analyze(code);
 ```
 
