@@ -14,6 +14,8 @@ async function main() {
     const selectedVersion = await version.run()
     console.log(`Running tests...`)
     await exec('npm run test-all')
+    console.log('Building...')
+    await exec('npm run build')
     console.log(`Generating a new ${selectedVersion} version...`)
     await exec(`npm version ${selectedVersion}`)
     console.log('Pushing to git...')
