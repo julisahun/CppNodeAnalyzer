@@ -4,7 +4,7 @@ import parser from "./parser";
 import * as utils from "./utils";
 import * as traversers from "./traversers";
 import { SyntaxNode as Node } from "tree-sitter";
-import { analyzerResult } from "./types";
+import { AnalyzerResult } from "./types";
 import { preprocess } from "./preprocessor";
 
 export default class Analyzer {
@@ -14,7 +14,7 @@ export default class Analyzer {
     this.store = new Data();
     this.formatter = new Formatter();
   }
-  analyze(code: string): analyzerResult {
+  analyze(code: string): AnalyzerResult {
     try {
     code = preprocess(code);
     } catch (e) {

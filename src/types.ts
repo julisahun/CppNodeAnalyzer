@@ -3,7 +3,7 @@ type Variable = {
   type: string;
 }
 
-export type analyzerResult = {
+export type AnalyzerResult = {
   analysis: {
     usedLibraries: string[];
     unUsedVariables: string[];
