@@ -12,6 +12,8 @@ const version = new Select({
 
 async function main() {
     const selectedVersion = await version.run()
+    console.log(`Running tests...`)
+    await exec('npm test')
     console.log(`Generating a new ${selectedVersion} version...`)
     await exec(`npm version ${selectedVersion}`)
     console.log('Pushing to git...')
