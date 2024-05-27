@@ -9,7 +9,7 @@
   ],
   "license": "MIT",
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && cp ./tree-sitter-cpp.wasm ./dist",
     "clean": "tsc --build --clean",
     "test": "jest",
     "test-all": "node scripts/run-tests.js",
