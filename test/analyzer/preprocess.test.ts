@@ -3,8 +3,8 @@ import { analyze } from "../tests";
 
 describe("scopes", () => {
   const path = "analyzer/preprocess";
-  it("should preprocess code", () => {
-    const result = analyze(`${path}/whileDefine.cpp`);
+  it("should preprocess code", async () => {
+    const result = await analyze(`${path}/whileDefine.cpp`);
     expect(result.analysis.isIterative).toEqual(true);
   });
 

@@ -1,4 +1,4 @@
-import { SyntaxNode as Node } from "tree-sitter";
+import { SyntaxNode as Node } from "web-tree-sitter";
 
 export default class Condition {
   nodes: Node[];

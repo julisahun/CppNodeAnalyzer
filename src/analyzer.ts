@@ -1,9 +1,9 @@
 import Data from "./data/store";
 import { Formatter } from "./formatter";
-import parser from "./parser";
+import * as parser from "./parser";
 import * as utils from "./utils";
 import * as traversers from "./traversers";
-import { SyntaxNode as Node } from "tree-sitter";
+import { SyntaxNode as Node } from "web-tree-sitter";
 import { AnalyzerResult } from "./types";
 import { preprocess } from "./preprocessor";
 
@@ -14,13 +14,13 @@ export default class Analyzer {
     this.store = new Data();
     this.formatter = new Formatter();
   }
-  analyze(code: string): AnalyzerResult {
+  async analyze(code: string): Promise<AnalyzerResult> {
     try {
     code = preprocess(code);
     } catch (e) {
       throw new Error(`Error preprocessing code: ${e.message}`);
     }
-    const tree = parser.parse(code);
+    const tree = await parser.parse(code);
     const rootNode = tree.rootNode;
     this.store.createScope({ type: "global" });
     let formattedCode = this.traverse(rootNode);
