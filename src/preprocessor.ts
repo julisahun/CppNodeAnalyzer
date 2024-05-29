@@ -10,7 +10,7 @@ function getIncludes(code: string) {
 
 export function preprocess(code: string) {
   const id = uuid();
-  const path = `${__dirname}/${id}`;
+  const path = `${id}`;
   let { includes, code: newCode } = getIncludes(code);
   try {
     execSync(`mkdir ${path}`);
