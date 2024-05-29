@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "babel-plugin-module-resolver": "^5.0.0",
+    "cpp-node-analyzer": "^1.1.4",
     "uuid": "^9.0.1",
     "web-tree-sitter": "^0.22.6"
   },
