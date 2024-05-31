@@ -16,9 +16,8 @@ export default class Analyzer {
   async analyze(code: string): Promise<AnalyzerResult> {
     try {
       if (utils.currentEnv === "node") {
-        import("./preprocessor").then(({ preprocess }) => {
-          code = preprocess(code);
-        })
+        const preprocessor = await import("./preprocessor")
+        code = preprocessor.preprocess(code);
       }
     } catch (e) {
       throw new Error(`Error preprocessing code: ${e.message}`);
