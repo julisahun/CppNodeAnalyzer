@@ -5,7 +5,6 @@ import * as utils from "./utils";
 import * as traversers from "./traversers";
 import { SyntaxNode as Node } from "web-tree-sitter";
 import { AnalyzerResult } from "./types";
-import { preprocess } from "./preprocessor";
 
 export default class Analyzer {
   store: Data;
@@ -16,7 +15,11 @@ export default class Analyzer {
   }
   async analyze(code: string): Promise<AnalyzerResult> {
     try {
-      code = preprocess(code);
+      if (utils.currentEnv === "node") {
+        import("./preprocessor").then(({ preprocess }) => {
+          code = preprocess(code);
+        })
+      }
     } catch (e) {
       throw new Error(`Error preprocessing code: ${e.message}`);
     }

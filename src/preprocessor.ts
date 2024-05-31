@@ -1,7 +1,6 @@
+import fs from 'fs';
 import { execSync } from 'child_process';
-import * as fs from 'fs';
 import { v4 as uuid } from 'uuid';
-import { currentEnv } from './utils';
 
 function getIncludes(code: string) {
   let includes = code.split('\n').filter((line) => line.startsWith('#include'));
@@ -10,7 +9,6 @@ function getIncludes(code: string) {
 }
 
 export function preprocess(code: string) {
-  if (currentEnv === 'browser') return code;
   const id = uuid();
   const path = `${id}`;
   let { includes, code: newCode } = getIncludes(code);

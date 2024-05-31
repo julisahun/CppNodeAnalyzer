@@ -2,4 +2,3 @@ node_modules/
 .env
 dist
 code.cpp
-tree-sitter-cpp.wasm
