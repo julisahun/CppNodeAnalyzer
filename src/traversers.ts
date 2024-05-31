@@ -1,5 +1,5 @@
-import { SyntaxNode as Node } from "web-tree-sitter";
 import * as utils from "./utils";
+import { Node } from "./types";
 
 const reservedIdentifiers = ["cin", "cout", "endl"];
 

@@ -1,5 +1,4 @@
-import { SyntaxNode as Node } from "web-tree-sitter";
-
+import { Node } from "../../types";
 export default class Condition {
   nodes: Node[];
   constructor(nodes: Node[]) {

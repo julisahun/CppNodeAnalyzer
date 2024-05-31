@@ -3,8 +3,7 @@ import { Formatter } from "./formatter";
 import * as parser from "./parser";
 import * as utils from "./utils";
 import * as traversers from "./traversers";
-import { SyntaxNode as Node } from "web-tree-sitter";
-import { AnalyzerResult } from "./types";
+import { AnalyzerResult, Node } from "./types";
 
 export default class Analyzer {
   store: Data;
@@ -23,7 +22,7 @@ export default class Analyzer {
       throw new Error(`Error preprocessing code: ${e.message}`);
     }
     const tree = await parser.parse(code);
-    const rootNode = tree.rootNode;
+    const rootNode = tree.rootNode as Node;
     this.store.createScope({ type: "global" });
     let formattedCode = this.traverse(rootNode);
     let result = {

@@ -1,4 +1,4 @@
-import { SyntaxNode as Node } from "web-tree-sitter";
+import { Node } from "./types";
 
 export function log(node: Node, depth: number): void {
   if (true) return;

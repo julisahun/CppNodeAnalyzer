@@ -1,5 +1,3 @@
-import fs from 'fs';
-import { execSync } from 'child_process';
 import { v4 as uuid } from 'uuid';
 
 function getIncludes(code: string) {
@@ -9,6 +7,8 @@ function getIncludes(code: string) {
 }
 
 export function preprocess(code: string) {
+  const fs = require('fs');
+  const { execSync } = require('child_process');
   const id = uuid();
   const path = `${id}`;
   let { includes, code: newCode } = getIncludes(code);

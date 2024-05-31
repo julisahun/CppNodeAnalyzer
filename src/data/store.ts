@@ -4,8 +4,7 @@ import ConditionalScope from "./objects/conditionalScope";
 import Condition from "./objects/condition";
 import FunctionScope from "./objects/functionScope";
 import * as algorithms from "../algorithms";
-import { SyntaxNode as Node } from "web-tree-sitter";
-import { FunctionObject, PropertyObject } from "../types";
+import { FunctionObject, PropertyObject, Node } from "../types";
 
 const conditionalScopes = ["if", "else if", "while", "for"];
 

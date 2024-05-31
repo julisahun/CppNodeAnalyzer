@@ -1,7 +1,17 @@
+import { currentEnv } from "./utils";
+import type { SyntaxNode as WebSyntaxNode } from "web-tree-sitter";
+import type { SyntaxNode as NodeSyntaxNode } from "tree-sitter";
+
+const isNode = currentEnv === 'node';
+
+type SyntaxNode = typeof isNode extends true ? NodeSyntaxNode : WebSyntaxNode;
+
 type Variable = {
   name: string;
   type: string;
 }
+
+export type Node = SyntaxNode;
 
 export type AnalyzerResult = {
   analysis: {
