@@ -16,7 +16,7 @@ export default class Analyzer {
   }
   async analyze(code: string): Promise<AnalyzerResult> {
     try {
-    code = preprocess(code);
+      code = preprocess(code);
     } catch (e) {
       throw new Error(`Error preprocessing code: ${e.message}`);
     }

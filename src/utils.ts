@@ -5,6 +5,8 @@ export function log(node: Node, depth: number): void {
   console.log(depth, node.type, node.text);
 }
 
+export const currentEnv = globalThis.window ? "browser" : "node"; 
+
 export function logChildren(node: Node, depth: number): void {
   node.children.forEach((c) => log(c, depth + 1));
 }
