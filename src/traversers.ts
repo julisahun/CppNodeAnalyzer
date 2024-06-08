@@ -125,8 +125,8 @@ export function function_declaratorTraverser(node: Node, depth: number) {
 }
 
 export function parameter_declarationTraverser(node: Node, depth: number) {
-  let name = ''
-  let mappedName = ''
+  let name = "";
+  let mappedName = "";
   if (utils.findChild({ node, type: "identifier" })) {
     let mappedData = this.formatter.tokenizeIdentifier(node);
     name = mappedData.name;
@@ -143,6 +143,8 @@ export function parameter_declarationTraverser(node: Node, depth: number) {
 }
 
 export function call_expressionTraverser(node: Node, depth: number) {
+  if (node.child(0).type === "primitive_type")
+    return node.children.map((c) => this.traverse(c, depth + 1)).join("");
   const { name } = this.formatter.tokenizeIdentifier(node);
   let children = node.children.map((c) => this.traverse(c, depth + 1));
   const isFunction = !utils.findChild({ node, type: "field_identifier" });
@@ -203,8 +205,10 @@ export function translation_unitTraverser(node: Node, depth: number) {
 }
 
 export function field_expressionTraverser(node: Node, depth: number) {
-  node.children.map(c => utils.log(c, depth + 1))
-  let identifier = utils.findChild({ node, type: "identifier" }) ?? utils.findChild({ node, type: "this" });
+  node.children.map((c) => utils.log(c, depth + 1));
+  let identifier =
+    utils.findChild({ node, type: "identifier" }) ??
+    utils.findChild({ node, type: "this" });
   let methodName = utils.findChild({ node, type: "field_identifier" });
   this.store.registerProperty(identifier.text, methodName.text);
   return `${this.formatter.mapToken(identifier.text)}.${methodName.text}`;
