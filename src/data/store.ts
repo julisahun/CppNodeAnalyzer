@@ -43,10 +43,11 @@ class Data {
   createScope({ type }: { type?: string } = {}) {
     let newScope: Scope;
     if (conditionalScopes.includes(type)) {
+      const loops = type === "while" || type === "for";
       newScope = new ConditionalScope({
-        loops: type === "while" || type === "for",
+        loops,
       });
-      this.profiler.registerLoop();
+      if (loops) this.profiler.registerLoop();
     } else if (type === "function") {
       newScope = new FunctionScope();
     } else {
