@@ -17,6 +17,8 @@ export default class Analyzer {
       if (utils.currentEnv === "node") {
         const preprocessor = await import("./preprocessor")
         code = preprocessor.preprocess(code);
+      } else if (code.includes('#define')) {
+        throw new Error('This code is not analyzable');
       }
     } catch (e) {
       throw new Error(`Error preprocessing code: ${e.message}`);
